@@ -7,9 +7,9 @@ document.addEventListener("DOMContentLoaded", function() {
     canvas = new fabric.Canvas('meme-canvas', {
         width: window.innerWidth * 0.9,
         height: window.innerHeight * 0.7,
-        backgroundColor: '#fff',
+        backgroundColor: '#e0e0e0'  // Light gray to confirm canvas visibility
     });
-    console.log('Canvas initialized:', canvas.width, canvas.height);
+    console.log('Canvas initialized with dimensions:', canvas.width, canvas.height);
 
     // Fetch overlay images
     fetch('starter_pack/overlays.json')
@@ -37,7 +37,6 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('overlay-selector').addEventListener('change', function(e) {
         const overlayUrl = e.target.value;
         if (overlayUrl) {
-            console.log('Loading overlay:', overlayUrl);
             fabric.Image.fromURL(overlayUrl, function(img) {
                 if (overlayImage) canvas.remove(overlayImage);
 
@@ -46,13 +45,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     top: 100,
                     selectable: true,
                     transparentCorners: false,
-                });
-
-                // Set visibility and styles for control points
-                overlayImage.setControlsVisibility({
-                    mt: true, mb: true, ml: true, mr: true, tl: true, tr: true, bl: true, br: true,
-                });
-                overlayImage.set({
                     borderColor: 'red',
                     cornerColor: 'blue',
                     cornerSize: 12,
@@ -90,8 +82,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     canvas.add(uploadedImage);
                     canvas.centerObject(uploadedImage);
-                    canvas.renderAll();
-                    console.log('Image uploaded and centered.');
+                    canvas.renderAll();  // Explicit re-render
+                    console.log('Uploaded image added and centered.');
                     saveState();
                 });
             };
@@ -155,6 +147,7 @@ document.addEventListener("DOMContentLoaded", function() {
         canvas.setHeight(newHeight);
         if (uploadedImage) uploadedImage.scaleToWidth(newWidth);
         if (overlayImage) overlayImage.scaleToWidth(newWidth * 0.5);
+        canvas.centerObject(uploadedImage);  // Center the image on resize
         canvas.renderAll();
         console.log('Canvas resized.');
     });
