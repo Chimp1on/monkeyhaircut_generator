@@ -43,10 +43,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 overlayImage = img.set({
                     left: 100,
                     top: 100,
-                    selectable: true
+                    selectable: true // Make it selectable
                 });
 
-                // Customize control points for better visibility
+                // Ensure control points are visible and customize appearance
                 overlayImage.setControlsVisibility({
                     tl: true, // Top-left
                     tr: true, // Top-right
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     mr: true  // Middle-right
                 });
 
-                // Change control point styles
+                // Customize control points for better visibility
                 overlayImage.set({
                     borderColor: 'red',           // Control points border color
                     cornerColor: 'blue',          // Control points color
