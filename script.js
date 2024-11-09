@@ -38,16 +38,22 @@ document.addEventListener("DOMContentLoaded", function() {
                     uploadedImage.set({
                         left: canvas.width / 2 - img.width / 2,
                         top: canvas.height / 2 - img.height / 2,
-                        selectable: false
+                        selectable: false,
+                        opacity: 1  // Ensure it's fully visible
                     });
 
                     // Clear canvas and add uploaded image
                     canvas.clear();
                     canvas.add(uploadedImage);
-                    saveState();
                     console.log('Uploaded image added and centered.');
                     console.log('Image Dimensions:', img.width, img.height);
                     console.log('Canvas Dimensions:', canvas.width, canvas.height);
+
+                    // Ensure canvas re-renders after the image is added
+                    canvas.renderAll();
+
+                    // Debugging logs for image position and visibility
+                    console.log('Image Position - left:', uploadedImage.left, 'top:', uploadedImage.top);
                 });
             };
             reader.readAsDataURL(file);
@@ -67,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     hasControls: true,
                     opacity: 0.8 // semi-transparent for visibility
                 });
-                
+
                 canvas.add(overlayImage);
                 overlayImage.bringToFront();
                 overlayImage.setCoords();
@@ -78,13 +84,14 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Undo and Redo functions
+    // Save the state for undo/redo
     function saveState() {
         stateStack.push(JSON.stringify(canvas));
         redoStack = []; // clear redo stack
         console.log('State saved.');
     }
 
+    // Undo and Redo functions
     document.getElementById('undo').addEventListener('click', function() {
         if (stateStack.length > 1) {
             redoStack.push(stateStack.pop());
@@ -103,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Additional event handlers: Flip, Download
+    // Flip functionality
     document.getElementById('flip-horizontal').addEventListener('click', function() {
         if (overlayImage) {
             overlayImage.toggle('flipX');
@@ -120,6 +127,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    // Download meme image
     document.getElementById('download-button').addEventListener('click', function() {
         const dataUrl = canvas.toDataURL('image/png');
         const link = document.createElement('a');
