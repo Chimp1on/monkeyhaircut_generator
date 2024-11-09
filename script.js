@@ -11,11 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
         height: canvasHeight,
         backgroundColor: '#fff',
     });
-
     console.log('Canvas initialized with fixed size: ', canvasWidth, canvasHeight);
-
-    // Log canvas dimensions to check them
-    console.log('Canvas Width:', canvas.width, 'Canvas Height:', canvas.height);
 
     // Fetch overlay images from overlays.json
     fetch('starter_pack/overlays.json')
@@ -80,16 +76,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     // Scale the uploaded image to fit within the fixed canvas size
                     const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
+                    console.log('Scale Factor:', scaleFactor); // Log scale factor
                     img.scale(scaleFactor);
 
-                    // Log scaled image dimensions for debugging
-                    console.log('Uploaded image scaled: ', img.width * scaleFactor, img.height * scaleFactor);
+                    // Log scaled image dimensions
+                    console.log('Scaled Image Width:', img.width * scaleFactor, 'Scaled Image Height:', img.height * scaleFactor);
 
                     // Log the position of the image
                     console.log('Image Position - left:', img.left, 'top:', img.top);
 
+                    // Add the image to the canvas
                     canvas.add(uploadedImage);
                     canvas.renderAll(); // Re-render the canvas to show the uploaded image
+
+                    // Bring the image to front to make sure it isn't hidden
+                    canvas.bringToFront(uploadedImage);
                     console.log('Uploaded image added to canvas.');
                 });
             };
