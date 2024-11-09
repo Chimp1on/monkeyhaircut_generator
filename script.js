@@ -46,6 +46,27 @@ document.addEventListener("DOMContentLoaded", function() {
                     selectable: true
                 });
 
+                // Customize control points for better visibility
+                overlayImage.setControlsVisibility({
+                    tl: true, // Top-left
+                    tr: true, // Top-right
+                    bl: true, // Bottom-left
+                    br: true, // Bottom-right
+                    mt: true, // Middle-top
+                    mb: true, // Middle-bottom
+                    ml: true, // Middle-left
+                    mr: true  // Middle-right
+                });
+
+                // Change control point styles
+                overlayImage.set({
+                    borderColor: 'red',           // Control points border color
+                    cornerColor: 'blue',          // Control points color
+                    cornerSize: 12,               // Size of control points
+                    transparentCorners: false,    // Disable transparent corners
+                    cornerStrokeColor: 'black'    // Color of the border around control points
+                });
+
                 // Scale the overlay to fit within the canvas
                 const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
                 img.scale(scaleFactor);
