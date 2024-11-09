@@ -21,6 +21,8 @@ body {
 #canvas-wrapper {
     border: 2px solid #ddd;
     overflow: hidden;
+    padding: 10px; /* Add padding to prevent clipping */
+    max-width: 100%;
 }
 
 canvas {
@@ -30,9 +32,11 @@ canvas {
 
 .controls {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
     gap: 10px;
+    margin-top: 10px;
 }
 
 button, select, input[type="file"] {
@@ -49,4 +53,13 @@ button, select, input[type="file"] {
         flex-direction: column;
         gap: 8px;
     }
+}
+
+/* Overlay control point styling */
+.canvas-container .corner {
+    background-color: blue !important;
+    border: 2px solid red !important;
+    width: 12px !important;
+    height: 12px !important;
+    border-radius: 50%;
 }
