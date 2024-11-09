@@ -3,13 +3,13 @@ document.addEventListener("DOMContentLoaded", function() {
     let undoStack = [];
     let redoStack = [];
 
-    // Initialize the canvas with fixed dimensions
+    // Initialize the canvas
     canvas = new fabric.Canvas('meme-canvas', {
         width: window.innerWidth * 0.9,
         height: window.innerHeight * 0.7,
-        backgroundColor: '#e0e0e0'  // Light gray to confirm canvas visibility
+        backgroundColor: '#e0e0e0', // Light background to confirm visibility
     });
-    console.log('Canvas initialized with dimensions:', canvas.width, canvas.height);
+    console.log('Canvas initialized:', canvas.width, canvas.height);
 
     // Fetch overlay images
     fetch('starter_pack/overlays.json')
@@ -26,20 +26,45 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .catch(error => console.error('Error loading overlays:', error));
 
-    // Save canvas state for undo/redo
+    // Save canvas state
     function saveState() {
         undoStack.push(canvas.toJSON());
         redoStack = [];
         console.log('State saved.');
     }
 
+    // Image upload and rendering
+    document.getElementById('upload-image').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                fabric.Image.fromURL(event.target.result, function(img) {
+                    uploadedImage = img.set({
+                        left: 0,
+                        top: 0,
+                        selectable: false,
+                    });
+
+                    canvas.clear(); // Clear canvas before adding new image
+                    canvas.add(uploadedImage); // Add uploaded image to canvas
+                    canvas.centerObject(uploadedImage); // Center the image
+                    uploadedImage.sendToBack(); // Ensure the uploaded image is at the back
+                    canvas.renderAll(); // Explicitly render the canvas
+                    console.log('Uploaded image added and centered.');
+                    saveState();
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
     // Overlay selection and placement
     document.getElementById('overlay-selector').addEventListener('change', function(e) {
         const overlayUrl = e.target.value;
         if (overlayUrl) {
             fabric.Image.fromURL(overlayUrl, function(img) {
-                if (overlayImage) canvas.remove(overlayImage);
-
+                if (overlayImage) canvas.remove(overlayImage); // Remove previous overlay
                 overlayImage = img.set({
                     left: 100,
                     top: 100,
@@ -53,45 +78,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
                 img.scale(scaleFactor);
-
-                canvas.add(overlayImage);
-                canvas.setActiveObject(overlayImage);
-                canvas.renderAll();
+                canvas.add(overlayImage); // Add overlay image
+                canvas.setActiveObject(overlayImage); // Set active to show controls
+                canvas.renderAll(); // Re-render canvas to show overlay
                 console.log('Overlay added and scaled.');
                 saveState();
             });
         }
     });
 
-    // Image upload
-    document.getElementById('upload-image').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                fabric.Image.fromURL(event.target.result, function(img) {
-                    uploadedImage = img.set({
-                        left: 0,
-                        top: 0,
-                        selectable: false,
-                    });
-
-                    canvas.clear();
-                    const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
-                    img.scale(scaleFactor);
-
-                    canvas.add(uploadedImage);
-                    canvas.centerObject(uploadedImage);
-                    canvas.renderAll();  // Explicit re-render
-                    console.log('Uploaded image added and centered.');
-                    saveState();
-                });
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    // Flip buttons
+    // Flip functionality for overlay image
     document.getElementById('flip-horizontal').addEventListener('click', function() {
         if (overlayImage) {
             overlayImage.set('flipX', !overlayImage.flipX);
@@ -110,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Undo and Redo
+    // Undo and Redo functionality
     document.getElementById('undo-button').addEventListener('click', function() {
         if (undoStack.length > 0) {
             redoStack.push(canvas.toJSON());
@@ -129,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Download button
+    // Download functionality
     document.getElementById('download-button').addEventListener('click', function() {
         const dataUrl = canvas.toDataURL('image/png');
         const link = document.createElement('a');
@@ -147,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function() {
         canvas.setHeight(newHeight);
         if (uploadedImage) uploadedImage.scaleToWidth(newWidth);
         if (overlayImage) overlayImage.scaleToWidth(newWidth * 0.5);
-        canvas.centerObject(uploadedImage);  // Center the image on resize
+        canvas.centerObject(uploadedImage); // Center the image on resize
         canvas.renderAll();
         console.log('Canvas resized.');
     });
