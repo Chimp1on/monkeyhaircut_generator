@@ -1,13 +1,17 @@
 document.addEventListener("DOMContentLoaded", function() {
     let canvas, uploadedImage, overlayImage;
 
+    // Get the window width and height for responsive canvas resizing
+    const canvasWidth = window.innerWidth * 0.9; // 90% of the screen width
+    const canvasHeight = window.innerHeight * 0.7; // 70% of the screen height
+
     // Initialize the canvas
     canvas = new fabric.Canvas('meme-canvas', {
-        width: window.innerWidth * 0.8,
-        height: window.innerHeight * 0.6,
+        width: canvasWidth,
+        height: canvasHeight,
         backgroundColor: '#fff',
     });
-    console.log('Canvas initialized.');
+    console.log('Canvas initialized with size: ', canvasWidth, canvasHeight);
 
     // Fetch overlay images from overlays.json
     fetch('starter_pack/overlays.json')
