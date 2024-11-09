@@ -10,10 +10,12 @@ document.addEventListener("DOMContentLoaded", function() {
         width: canvasWidth,
         height: canvasHeight,
         backgroundColor: '#fff',
-        borderColor: '#000', // Border to visually debug canvas
-        borderWidth: 2, // Border thickness
     });
+
     console.log('Canvas initialized with fixed size: ', canvasWidth, canvasHeight);
+
+    // Log canvas dimensions to check them
+    console.log('Canvas Width:', canvas.width, 'Canvas Height:', canvas.height);
 
     // Fetch overlay images from overlays.json
     fetch('starter_pack/overlays.json')
@@ -75,36 +77,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     // Clear any previous content
                     canvas.clear();
-                    console.log('Canvas cleared.');
 
                     // Scale the uploaded image to fit within the fixed canvas size
                     const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
                     img.scale(scaleFactor);
 
-                    // Log the image size after scaling
+                    // Log scaled image dimensions for debugging
                     console.log('Uploaded image scaled: ', img.width * scaleFactor, img.height * scaleFactor);
 
-                    // Ensure the image is within bounds
-                    const imageWidth = img.width * scaleFactor;
-                    const imageHeight = img.height * scaleFactor;
-                    console.log('Scaled Image Width: ', imageWidth, 'Scaled Image Height: ', imageHeight);
+                    // Log the position of the image
+                    console.log('Image Position - left:', img.left, 'top:', img.top);
 
-                    // Center image in the canvas
-                    const leftPosition = Math.max((canvas.width - imageWidth) / 2, 0); // Center horizontally, but do not go outside canvas
-                    const topPosition = Math.max((canvas.height - imageHeight) / 2, 0); // Center vertically, but do not go outside canvas
-
-                    img.set({
-                        left: leftPosition,
-                        top: topPosition
-                    });
-
-                    // Log final image position
-                    console.log('Final Image Position - left:', img.left, 'top:', img.top);
-
-                    // Add image to canvas
                     canvas.add(uploadedImage);
-                    canvas.renderAll(); // Force re-render of the canvas
-
+                    canvas.renderAll(); // Re-render the canvas to show the uploaded image
                     console.log('Uploaded image added to canvas.');
                 });
             };
