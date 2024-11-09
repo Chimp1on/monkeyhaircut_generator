@@ -1,57 +1,88 @@
-/* Basic styling for the canvas and controls */
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+/* Basic reset for margins and padding */
+* {
     margin: 0;
-    height: 100vh;
-    background-color: #f4f4f4;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+/* Container for the canvas */
 #canvas-container {
-    margin-top: 20px;
-    position: relative;
-    width: 90%;
-    height: 70%;
-}
-
-#canvas-wrapper {
     width: 100%;
-    height: 100%;
-    border: 2px solid #ccc;
-    background-color: #fff;
-}
-
-canvas {
-    width: 100%;
-    height: 100%;
-    border: 1px solid black;
-}
-
-.controls {
+    height: 100vh;
     display: flex;
-    flex-direction: column;
-    margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f4; /* Light background color */
+}
+
+/* Canvas wrapper */
+#canvas-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Canvas styling */
+#canvas-container canvas {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+}
+
+/* Controls */
+.controls {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    display: flex;
     gap: 10px;
     align-items: center;
 }
 
-input[type="file"], select, button {
-    font-size: 16px;
-    padding: 8px;
-    margin: 5px;
-}
-
-button {
+/* Controls layout */
+.controls input,
+.controls select,
+.controls button {
+    font-size: 14px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
     cursor: pointer;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
 }
 
-button:hover {
-    background-color: #45a049;
+.controls button {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.controls button:hover {
+    background-color: #0056b3;
+}
+
+.controls select {
+    width: 200px;
+}
+
+.controls input[type="file"] {
+    font-size: 12px;
+}
+
+/* Ensure mobile responsiveness */
+@media (max-width: 600px) {
+    .controls {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .controls input,
+    .controls select,
+    .controls button {
+        width: 100%;
+    }
 }
