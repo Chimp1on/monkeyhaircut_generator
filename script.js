@@ -1,180 +1,175 @@
 document.addEventListener("DOMContentLoaded", function() {
-let canvas, uploadedImage, overlayImage;
+    let canvas, uploadedImage, overlayImage;
 
-// Fixed canvas size
-const canvasWidth = window.innerWidth * 0.9; // 90% of the screen width
-const canvasHeight = window.innerHeight * 0.7; // 70% of the screen height
+    // Fixed canvas size
+    const canvasWidth = window.innerWidth * 0.9; // 90% of the screen width
+    const canvasHeight = window.innerHeight * 0.7; // 70% of the screen height
 
-// Initialize the canvas
-canvas = new fabric.Canvas('meme-canvas', {
-width: canvasWidth,
-height: canvasHeight,
-backgroundColor: '#fff',
-});
-console.log('Canvas initialized with fixed size: ', canvasWidth, canvasHeight);
+    // Initialize the canvas
+    canvas = new fabric.Canvas('meme-canvas', {
+        width: canvasWidth,
+        height: canvasHeight,
+        backgroundColor: '#fff',
+    });
+    console.log('Canvas initialized with fixed size: ', canvasWidth, canvasHeight);
 
-// Fetch overlay images from overlays.json
-fetch('starter_pack/overlays.json')
-.then(response => response.json())
-.then(images => {
-const overlaySelector = document.getElementById('overlay-selector');
-// Populate the dropdown with overlay images
-images.forEach(image => {
-const option = document.createElement('option');
-option.value = `starter_pack/${image}`;
-option.textContent = image;
-overlaySelector.appendChild(option);
-});
-console.log('Overlay images loaded:', images);
-})
-.catch(error => {
-console.error('Error loading overlays:', error);
-});
+    // Fetch overlay images from overlays.json
+    fetch('starter_pack/overlays.json')
+        .then(response => response.json())
+        .then(images => {
+            const overlaySelector = document.getElementById('overlay-selector');
+            // Populate the dropdown with overlay images
+            images.forEach(image => {
+                const option = document.createElement('option');
+                option.value = `starter_pack/${image}`;
+                option.textContent = image;
+                overlaySelector.appendChild(option);
+            });
+            console.log('Overlay images loaded:', images);
+        })
+        .catch(error => {
+            console.error('Error loading overlays:', error);
+        });
 
-// Add event listener for overlay selection
-document.getElementById('overlay-selector').addEventListener('change', function(e) {
-const overlayUrl = e.target.value;
-if (overlayUrl) {
-console.log('Selected overlay:', overlayUrl);
-fabric.Image.fromURL(overlayUrl, function(img) {
-if (overlayImage) {
-canvas.remove(overlayImage); // Remove previous overlay if it exists
-}
-overlayImage = img.set({
-left: 100,
-top: 100,
-                    selectable: true // Make it selectable
+    // Add event listener for overlay selection
+    document.getElementById('overlay-selector').addEventListener('change', function(e) {
+        const overlayUrl = e.target.value;
+        if (overlayUrl) {
+            console.log('Selected overlay:', overlayUrl);
+            fabric.Image.fromURL(overlayUrl, function(img) {
+                if (overlayImage) {
+                    canvas.remove(overlayImage); // Remove previous overlay if it exists
+                }
+                overlayImage = img.set({
+                    left: 100,
+                    top: 100,
                     selectable: true,  // Make the overlay image selectable
                     transparentCorners: false // Ensure corners are not transparent
-});
+                });
 
-                // Ensure control points are visible and customize appearance
                 // Set control points visibility immediately
-overlayImage.setControlsVisibility({
-tl: true, // Top-left
-tr: true, // Top-right
-bl: true, // Bottom-left
-br: true, // Bottom-right
-mt: true, // Middle-top
-mb: true, // Middle-bottom
-ml: true, // Middle-left
-mr: true  // Middle-right
-});
+                overlayImage.setControlsVisibility({
+                    tl: true, // Top-left
+                    tr: true, // Top-right
+                    bl: true, // Bottom-left
+                    br: true, // Bottom-right
+                    mt: true, // Middle-top
+                    mb: true, // Middle-bottom
+                    ml: true, // Middle-left
+                    mr: true  // Middle-right
+                });
 
-// Customize control points for better visibility
-overlayImage.set({
-borderColor: 'red',           // Control points border color
-cornerColor: 'blue',          // Control points color
-cornerSize: 12,               // Size of control points
-                    transparentCorners: false,    // Disable transparent corners
-                    cornerStrokeColor: 'black'    // Color of the border around control points
+                // Customize control points for better visibility
+                overlayImage.set({
+                    borderColor: 'red',           // Control points border color
+                    cornerColor: 'blue',          // Control points color
+                    cornerSize: 12,               // Size of control points
                     cornerStrokeColor: 'black',   // Border color of the control points
-});
+                });
 
-// Scale the overlay to fit within the canvas
-const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
-img.scale(scaleFactor);
+                // Scale the overlay to fit within the canvas
+                const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
+                img.scale(scaleFactor);
 
                 // Ensure the overlay image is selectable and focused
-canvas.add(overlayImage);
-                canvas.renderAll(); // Re-render canvas to show the overlay
+                canvas.add(overlayImage);
                 canvas.setActiveObject(overlayImage); // Set the overlay image as active
                 canvas.renderAll(); // Force canvas to re-render and show control points immediately
-console.log('Overlay image added to canvas.');
-});
-}
-});
+                console.log('Overlay image added to canvas.');
+            });
+        }
+    });
 
-// Handle image upload
-document.getElementById('upload-image').addEventListener('change', function(e) {
-const file = e.target.files[0];
-if (file) {
-console.log('Uploading image:', file);
-const reader = new FileReader();
-reader.onload = function(event) {
-fabric.Image.fromURL(event.target.result, function(img) {
-uploadedImage = img.set({
-left: 0,
-top: 0,
-selectable: false // Disable image dragging
-});
+    // Handle image upload
+    document.getElementById('upload-image').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            console.log('Uploading image:', file);
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                fabric.Image.fromURL(event.target.result, function(img) {
+                    uploadedImage = img.set({
+                        left: 0,
+                        top: 0,
+                        selectable: false // Disable image dragging
+                    });
 
-// Clear any previous content
-canvas.clear();
+                    // Clear any previous content
+                    canvas.clear();
 
-// Scale the uploaded image to fit within the fixed canvas size
-const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
-img.scale(scaleFactor);
+                    // Scale the uploaded image to fit within the fixed canvas size
+                    const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
+                    img.scale(scaleFactor);
 
-// Adjust the image position to center it
-const left = (canvas.width - img.getScaledWidth()) / 2;
-const top = (canvas.height - img.getScaledHeight()) / 2;
+                    // Adjust the image position to center it
+                    const left = (canvas.width - img.getScaledWidth()) / 2;
+                    const top = (canvas.height - img.getScaledHeight()) / 2;
 
-img.set({ left: left, top: top });
+                    img.set({ left: left, top: top });
 
-canvas.add(uploadedImage);
-canvas.renderAll(); // Re-render the canvas to show the uploaded image
-console.log('Uploaded image added to canvas.');
-});
-};
-reader.readAsDataURL(file);
-}
-});
+                    canvas.add(uploadedImage);
+                    canvas.renderAll(); // Re-render the canvas to show the uploaded image
+                    console.log('Uploaded image added to canvas.');
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 
-// Flip functionality for overlay image
-document.getElementById('flip-horizontal').addEventListener('click', function() {
-if (overlayImage) {
-overlayImage.set('flipX', !overlayImage.flipX);
-canvas.renderAll();
-console.log('Overlay image flipped horizontally.');
-}
-});
+    // Flip functionality for overlay image
+    document.getElementById('flip-horizontal').addEventListener('click', function() {
+        if (overlayImage) {
+            overlayImage.set('flipX', !overlayImage.flipX);
+            canvas.renderAll();
+            console.log('Overlay image flipped horizontally.');
+        }
+    });
 
-document.getElementById('flip-vertical').addEventListener('click', function() {
-if (overlayImage) {
-overlayImage.set('flipY', !overlayImage.flipY);
-canvas.renderAll();
-console.log('Overlay image flipped vertically.');
-}
-});
+    document.getElementById('flip-vertical').addEventListener('click', function() {
+        if (overlayImage) {
+            overlayImage.set('flipY', !overlayImage.flipY);
+            canvas.renderAll();
+            console.log('Overlay image flipped vertically.');
+        }
+    });
 
-// Download meme image
-document.getElementById('download-button').addEventListener('click', function() {
-const dataUrl = canvas.toDataURL('image/png');
-const link = document.createElement('a');
-link.href = dataUrl;
-link.download = 'meme.png';
-link.click();
-console.log('Meme downloaded.');
-});
+    // Download meme image
+    document.getElementById('download-button').addEventListener('click', function() {
+        const dataUrl = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = 'meme.png';
+        link.click();
+        console.log('Meme downloaded.');
+    });
 
-// Resize the canvas when window is resized and rescale the images
-window.addEventListener('resize', function() {
-const newCanvasWidth = window.innerWidth * 0.9;
-const newCanvasHeight = window.innerHeight * 0.7;
+    // Resize the canvas when window is resized and rescale the images
+    window.addEventListener('resize', function() {
+        const newCanvasWidth = window.innerWidth * 0.9;
+        const newCanvasHeight = window.innerHeight * 0.7;
 
-canvas.setWidth(newCanvasWidth);
-canvas.setHeight(newCanvasHeight);
+        canvas.setWidth(newCanvasWidth);
+        canvas.setHeight(newCanvasHeight);
 
-console.log('Canvas resized:', newCanvasWidth, newCanvasHeight);
+        console.log('Canvas resized:', newCanvasWidth, newCanvasHeight);
 
-// Re-scale images to fit the new canvas size while maintaining their aspect ratio
-if (uploadedImage) {
-const scaleFactor = Math.min(newCanvasWidth / uploadedImage.width, newCanvasHeight / uploadedImage.height);
-uploadedImage.scale(scaleFactor);
+        // Re-scale images to fit the new canvas size while maintaining their aspect ratio
+        if (uploadedImage) {
+            const scaleFactor = Math.min(newCanvasWidth / uploadedImage.width, newCanvasHeight / uploadedImage.height);
+            uploadedImage.scale(scaleFactor);
 
-// Adjust the position of the image to keep it centered
-const left = (newCanvasWidth - uploadedImage.getScaledWidth()) / 2;
-const top = (newCanvasHeight - uploadedImage.getScaledHeight()) / 2;
+            // Adjust the position of the image to keep it centered
+            const left = (newCanvasWidth - uploadedImage.getScaledWidth()) / 2;
+            const top = (newCanvasHeight - uploadedImage.getScaledHeight()) / 2;
 
-uploadedImage.set({ left: left, top: top });
-}
+            uploadedImage.set({ left: left, top: top });
+        }
 
-if (overlayImage) {
-const scaleFactor = Math.min(newCanvasWidth / overlayImage.width, newCanvasHeight / overlayImage.height);
-overlayImage.scale(scaleFactor);
-}
+        if (overlayImage) {
+            const scaleFactor = Math.min(newCanvasWidth / overlayImage.width, newCanvasHeight / overlayImage.height);
+            overlayImage.scale(scaleFactor);
+        }
 
-canvas.renderAll(); // Re-render the canvas
-});
+        canvas.renderAll(); // Re-render the canvas
+    });
 });
