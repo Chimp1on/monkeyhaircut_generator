@@ -167,4 +167,25 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('redo-button').addEventListener('click', function() {
         if (redoStack.length > 0) {
             const lastState = redoStack.pop();
-            undoStack.push(JSON.stringify(canvas.toJSON())); // Save current state to undo
+            undoStack.push(JSON.stringify(canvas.toJSON())); // Save current state to undo stack
+            canvas.loadFromJSON(lastState, function() {
+                canvas.renderAll();
+                document.getElementById('undo-button').disabled = false; // Enable Undo button
+                if (redoStack.length === 0) {
+                    document.getElementById('redo-button').disabled = true; // Disable Redo button if empty
+                }
+                console.log('Redo performed');
+            });
+        }
+    });
+
+    // Download meme image
+    document.getElementById('download-button').addEventListener('click', function() {
+        const dataUrl = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = 'meme.png';
+        link.click();
+        console.log('Meme downloaded.');
+    });
+});
