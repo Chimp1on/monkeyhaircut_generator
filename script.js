@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", function() {
         width: canvasWidth,
         height: canvasHeight,
         backgroundColor: '#fff',
+        borderColor: '#000', // Border to visually debug canvas
+        borderWidth: 2, // Border thickness
     });
     console.log('Canvas initialized with fixed size: ', canvasWidth, canvasHeight);
 
@@ -87,9 +89,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     const imageHeight = img.height * scaleFactor;
                     console.log('Scaled Image Width: ', imageWidth, 'Scaled Image Height: ', imageHeight);
 
-                    // Adjust image position to ensure it stays within canvas
-                    const leftPosition = (canvas.width - imageWidth) / 2; // Center horizontally
-                    const topPosition = (canvas.height - imageHeight) / 2; // Center vertically
+                    // Center image in the canvas
+                    const leftPosition = Math.max((canvas.width - imageWidth) / 2, 0); // Center horizontally, but do not go outside canvas
+                    const topPosition = Math.max((canvas.height - imageHeight) / 2, 0); // Center vertically, but do not go outside canvas
 
                     img.set({
                         left: leftPosition,
