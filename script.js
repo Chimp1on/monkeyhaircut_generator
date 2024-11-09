@@ -62,6 +62,8 @@ document.addEventListener("DOMContentLoaded", function() {
                         selectable: false // Disable image dragging
                     });
                     canvas.clear(); // Clear any previous content before adding the new image
+                    img.scaleToWidth(canvas.width); // Scale image to fit the canvas width
+                    img.scaleToHeight(canvas.height); // Scale image to fit the canvas height
                     canvas.add(uploadedImage);
                     canvas.renderAll(); // Re-render the canvas to show the uploaded image
                     console.log('Uploaded image added to canvas.');
