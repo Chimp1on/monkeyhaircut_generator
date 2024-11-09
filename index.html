@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+<div class="container">
     <h1>Meme Generator</h1>
 
     <!-- Image upload -->
@@ -27,9 +29,13 @@
     </div>
 
     <!-- Canvas where meme will be generated -->
-    <canvas id="meme-canvas"></canvas>
+    <div id="canvas-container">
+        <canvas id="meme-canvas"></canvas>
+    </div>
+</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
-    <script src="script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
+<script src="script.js"></script>
+
 </body>
 </html>
