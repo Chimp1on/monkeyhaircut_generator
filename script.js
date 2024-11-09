@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
     canvas = new fabric.Canvas('meme-canvas', {
         width: 1804.5,
         height: 913.5,
-        backgroundColor: '#fff',
+        backgroundColor: '#fff',  // Make sure background is white
     });
     console.log('Canvas initialized:', canvas.width, canvas.height);
 
@@ -50,7 +50,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     console.log('Canvas Dimensions:', canvas.width, canvas.height);
 
                     // Ensure canvas re-renders after the image is added
-                    canvas.renderAll();
+                    canvas.renderAll(); // Make sure rendering is forced
+                    canvas.requestRenderAll(); // Explicitly request re-render
 
                     // Debugging logs for image position and visibility
                     console.log('Image Position - left:', uploadedImage.left, 'top:', uploadedImage.top);
