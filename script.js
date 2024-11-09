@@ -1,4 +1,4 @@
-let canvas, uploadedImage, overlayImage, isCroppingEnabled = false, croppingRect;
+let canvas, uploadedImage, overlayImage;
 
 // Initialize the canvas
 window.onload = function() {
@@ -61,66 +61,6 @@ window.onload = function() {
             };
             reader.readAsDataURL(file);
         }
-    });
-
-    // Enable cropping mode
-    document.getElementById('enable-crop').addEventListener('click', function() {
-        if (isCroppingEnabled) {
-            // Apply cropping logic if rectangle is drawn
-            if (croppingRect) {
-                const cropped = new fabric.Image(uploadedImage.getElement(), {
-                    left: uploadedImage.left + croppingRect.left,
-                    top: uploadedImage.top + croppingRect.top,
-                    width: croppingRect.width,
-                    height: croppingRect.height
-                });
-                canvas.remove(uploadedImage);
-                uploadedImage = cropped;
-                canvas.add(uploadedImage);
-                croppingRect = null; // Clear the crop rectangle
-            }
-        } else {
-            // Enable cropping mode: Draw a rectangle
-            canvas.isDrawingMode = true;
-            canvas.selection = false; // Disable selection mode
-        }
-        isCroppingEnabled = !isCroppingEnabled;
-    });
-
-    // Drawing a rectangle on canvas to define cropping area
-    canvas.on('mouse:down', function(event) {
-        if (canvas.isDrawingMode) {
-            const pointer = canvas.getPointer(event.e);
-            croppingRect = new fabric.Rect({
-                left: pointer.x,
-                top: pointer.y,
-                fill: 'rgba(255, 0, 0, 0.3)', // Semi-transparent red fill for the crop area
-                width: 0,
-                height: 0,
-                selectable: false,
-                evented: false,
-                hasBorders: false,
-                hasControls: false
-            });
-            canvas.add(croppingRect);
-        }
-    });
-
-    // Update rectangle size as the user drags the mouse
-    canvas.on('mouse:move', function(event) {
-        if (croppingRect) {
-            const pointer = canvas.getPointer(event.e);
-            croppingRect.set({
-                width: pointer.x - croppingRect.left,
-                height: pointer.y - croppingRect.top
-            });
-            canvas.renderAll();
-        }
-    });
-
-    // Finalize rectangle size when the user releases the mouse
-    canvas.on('mouse:up', function() {
-        canvas.isDrawingMode = false;
     });
 
     // Rotate and flip functionality
