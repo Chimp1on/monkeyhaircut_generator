@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
         width: canvasWidth,
         height: canvasHeight,
         backgroundColor: '#fff',
+        preserveObjectStacking: true // To keep object order when manipulating
     });
     console.log('Canvas initialized with fixed size: ', canvasWidth, canvasHeight);
 
