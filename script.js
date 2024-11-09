@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", function() {
     let canvas, uploadedImage, overlayImage;
 
-    // Initial fixed canvas size
-    let canvasWidth = window.innerWidth * 0.9; // 90% of the screen width
-    let canvasHeight = window.innerHeight * 0.7; // 70% of the screen height
+    // Fixed canvas size
+    const canvasWidth = window.innerWidth * 0.9; // 90% of the screen width
+    const canvasHeight = window.innerHeight * 0.7; // 70% of the screen height
 
     // Initialize the canvas
     canvas = new fabric.Canvas('meme-canvas', {
@@ -12,40 +12,6 @@ document.addEventListener("DOMContentLoaded", function() {
         backgroundColor: '#fff',
     });
     console.log('Canvas initialized with fixed size: ', canvasWidth, canvasHeight);
-
-    // Function to update canvas size and rescale images
-    function updateCanvasSize() {
-        const newCanvasWidth = window.innerWidth * 0.9;
-        const newCanvasHeight = window.innerHeight * 0.7;
-
-        // Only update if the size changes
-        if (newCanvasWidth !== canvasWidth || newCanvasHeight !== canvasHeight) {
-            canvas.setWidth(newCanvasWidth);
-            canvas.setHeight(newCanvasHeight);
-            console.log('Canvas resized: ', newCanvasWidth, newCanvasHeight);
-
-            // Rescale the images if they exist
-            if (uploadedImage) {
-                const scaleFactor = Math.min(newCanvasWidth / uploadedImage.width, newCanvasHeight / uploadedImage.height);
-                uploadedImage.scale(scaleFactor);
-                uploadedImage.set({
-                    left: (newCanvasWidth - uploadedImage.width * scaleFactor) / 2, // Center the image
-                    top: (newCanvasHeight - uploadedImage.height * scaleFactor) / 2 // Center the image
-                });
-            }
-
-            if (overlayImage) {
-                const scaleFactor = Math.min(newCanvasWidth / overlayImage.width, newCanvasHeight / overlayImage.height);
-                overlayImage.scale(scaleFactor);
-                overlayImage.set({
-                    left: (newCanvasWidth - overlayImage.width * scaleFactor) / 2, // Center the overlay
-                    top: (newCanvasHeight - overlayImage.height * scaleFactor) / 2 // Center the overlay
-                });
-            }
-
-            canvas.renderAll(); // Re-render canvas to reflect changes
-        }
-    }
 
     // Fetch overlay images from overlays.json
     fetch('starter_pack/overlays.json')
@@ -110,28 +76,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     // Scale the uploaded image to fit within the fixed canvas size
                     const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
-                    console.log('Scale Factor:', scaleFactor); // Log scale factor
                     img.scale(scaleFactor);
 
-                    // Log scaled image dimensions
-                    console.log('Scaled Image Width:', img.width * scaleFactor, 'Scaled Image Height:', img.height * scaleFactor);
+                    // Adjust the image position to center it
+                    const left = (canvas.width - img.getScaledWidth()) / 2;
+                    const top = (canvas.height - img.getScaledHeight()) / 2;
 
-                    // Log the position of the image
-                    console.log('Image Position - left:', img.left, 'top:', img.top);
+                    img.set({ left: left, top: top });
 
-                    // Add the image to the canvas
                     canvas.add(uploadedImage);
                     canvas.renderAll(); // Re-render the canvas to show the uploaded image
-
-                    // Bring the image to front to make sure it isn't hidden
-                    canvas.bringToFront(uploadedImage);
                     console.log('Uploaded image added to canvas.');
-
-                    // Log canvas state after adding image
-                    console.log('Canvas width:', canvas.width, 'Canvas height:', canvas.height);
-                    canvas.forEachObject(function(obj) {
-                        console.log('Object on canvas:', obj);
-                    });
                 });
             };
             reader.readAsDataURL(file);
@@ -165,8 +120,33 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log('Meme downloaded.');
     });
 
-    // Listen for window resize and update canvas size
+    // Resize the canvas when window is resized and rescale the images
     window.addEventListener('resize', function() {
-        updateCanvasSize();
+        const newCanvasWidth = window.innerWidth * 0.9;
+        const newCanvasHeight = window.innerHeight * 0.7;
+
+        canvas.setWidth(newCanvasWidth);
+        canvas.setHeight(newCanvasHeight);
+
+        console.log('Canvas resized:', newCanvasWidth, newCanvasHeight);
+
+        // Re-scale images to fit the new canvas size while maintaining their aspect ratio
+        if (uploadedImage) {
+            const scaleFactor = Math.min(newCanvasWidth / uploadedImage.width, newCanvasHeight / uploadedImage.height);
+            uploadedImage.scale(scaleFactor);
+
+            // Adjust the position of the image to keep it centered
+            const left = (newCanvasWidth - uploadedImage.getScaledWidth()) / 2;
+            const top = (newCanvasHeight - uploadedImage.getScaledHeight()) / 2;
+
+            uploadedImage.set({ left: left, top: top });
+        }
+
+        if (overlayImage) {
+            const scaleFactor = Math.min(newCanvasWidth / overlayImage.width, newCanvasHeight / overlayImage.height);
+            overlayImage.scale(scaleFactor);
+        }
+
+        canvas.renderAll(); // Re-render the canvas
     });
 });
