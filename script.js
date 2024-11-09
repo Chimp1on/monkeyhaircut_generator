@@ -102,4 +102,65 @@ document.addEventListener("DOMContentLoaded", function() {
                     img.scale(scaleFactor);
 
                     canvas.add(uploadedImage);
-                    canvas.renderAll
+                    canvas.renderAll();
+                    console.log('Uploaded image added to canvas.');
+                    saveState();
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Flip functionality for overlay image
+    document.getElementById('flip-horizontal').addEventListener('click', function() {
+        if (overlayImage) {
+            overlayImage.set('flipX', !overlayImage.flipX);
+            canvas.renderAll();
+            saveState();
+            console.log('Overlay image flipped horizontally.');
+        }
+    });
+
+    document.getElementById('flip-vertical').addEventListener('click', function() {
+        if (overlayImage) {
+            overlayImage.set('flipY', !overlayImage.flipY);
+            canvas.renderAll();
+            saveState();
+            console.log('Overlay image flipped vertically.');
+        }
+    });
+
+    // Undo functionality
+    document.getElementById('undo-button').addEventListener('click', function() {
+        if (undoStack.length > 0) {
+            redoStack.push(canvas.toJSON());
+            const lastState = undoStack.pop();
+            canvas.loadFromJSON(lastState, () => {
+                canvas.renderAll();
+                console.log('Undo: Canvas reverted to previous state.');
+            });
+        }
+    });
+
+    // Redo functionality
+    document.getElementById('redo-button').addEventListener('click', function() {
+        if (redoStack.length > 0) {
+            undoStack.push(canvas.toJSON());
+            const nextState = redoStack.pop();
+            canvas.loadFromJSON(nextState, () => {
+                canvas.renderAll();
+                console.log('Redo: Canvas advanced to next state.');
+            });
+        }
+    });
+
+    // Download meme image
+    document.getElementById('download-button').addEventListener('click', function() {
+        const dataUrl = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = 'meme.png';
+        link.click();
+        console.log('Meme downloaded.');
+    });
+});
