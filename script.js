@@ -41,8 +41,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     canvas.remove(overlayImage); // Remove previous overlay if it exists
                 }
                 overlayImage = img.set({
-                    left: 100,
-                    top: 100,
+                    left: canvas.width / 2 - img.width / 2, // Position at center of canvas
+                    top: canvas.height / 2 - img.height / 2, // Position at center of canvas
                     selectable: true
                 });
 
