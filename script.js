@@ -73,16 +73,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     // Clear any previous content
                     canvas.clear();
+                    console.log('Canvas cleared.');
 
                     // Scale the uploaded image to fit within the fixed canvas size
                     const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
                     img.scale(scaleFactor);
 
-                    // Log the image loading process
-                    console.log('Uploaded image loaded:', img);
+                    // Log the image size after scaling
+                    console.log('Uploaded image scaled: ', img.width * scaleFactor, img.height * scaleFactor);
 
+                    // Add image to canvas
                     canvas.add(uploadedImage);
                     canvas.renderAll(); // Re-render the canvas to show the uploaded image
+
                     console.log('Uploaded image added to canvas.');
                 });
             };
