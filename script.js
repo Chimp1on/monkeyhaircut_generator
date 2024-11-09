@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", function() {
         width: canvasWidth,
         height: canvasHeight,
         backgroundColor: '#fff',
-        preserveObjectStacking: true // To keep object order when manipulating
     });
     console.log('Canvas initialized with fixed size: ', canvasWidth, canvasHeight);
 
@@ -42,8 +41,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     canvas.remove(overlayImage); // Remove previous overlay if it exists
                 }
                 overlayImage = img.set({
-                    left: canvas.width / 2 - img.width / 2, // Position at center of canvas
-                    top: canvas.height / 2 - img.height / 2, // Position at center of canvas
+                    left: 100,
+                    top: 100,
                     selectable: true
                 });
 
@@ -78,6 +77,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     // Scale the uploaded image to fit within the fixed canvas size
                     const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
                     img.scale(scaleFactor);
+
+                    // Log the image loading process
+                    console.log('Uploaded image loaded:', img);
 
                     canvas.add(uploadedImage);
                     canvas.renderAll(); // Re-render the canvas to show the uploaded image
