@@ -82,14 +82,22 @@ document.addEventListener("DOMContentLoaded", function() {
                     // Log the image size after scaling
                     console.log('Uploaded image scaled: ', img.width * scaleFactor, img.height * scaleFactor);
 
-                    // Log the image position
-                    console.log('Image Position - left:', img.left, 'top:', img.top);
+                    // Ensure the image is within bounds
+                    const imageWidth = img.width * scaleFactor;
+                    const imageHeight = img.height * scaleFactor;
+                    console.log('Scaled Image Width: ', imageWidth, 'Scaled Image Height: ', imageHeight);
 
-                    // Ensure the image is within the canvas bounds
+                    // Adjust image position to ensure it stays within canvas
+                    const leftPosition = (canvas.width - imageWidth) / 2; // Center horizontally
+                    const topPosition = (canvas.height - imageHeight) / 2; // Center vertically
+
                     img.set({
-                        left: Math.max(0, Math.min(img.left, canvas.width - img.width * scaleFactor)),
-                        top: Math.max(0, Math.min(img.top, canvas.height - img.height * scaleFactor))
+                        left: leftPosition,
+                        top: topPosition
                     });
+
+                    // Log final image position
+                    console.log('Final Image Position - left:', img.left, 'top:', img.top);
 
                     // Add image to canvas
                     canvas.add(uploadedImage);
