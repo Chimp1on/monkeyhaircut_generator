@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     let canvas, uploadedImage, overlayImage;
 
-    // Get the window width and height for responsive canvas resizing
+    // Fixed canvas size
     const canvasWidth = window.innerWidth * 0.9; // 90% of the screen width
     const canvasHeight = window.innerHeight * 0.7; // 70% of the screen height
 
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
         height: canvasHeight,
         backgroundColor: '#fff',
     });
-    console.log('Canvas initialized with size: ', canvasWidth, canvasHeight);
+    console.log('Canvas initialized with fixed size: ', canvasWidth, canvasHeight);
 
     // Fetch overlay images from overlays.json
     fetch('starter_pack/overlays.json')
@@ -45,6 +45,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     top: 100,
                     selectable: true
                 });
+
+                // Scale the overlay to fit within the canvas
+                const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
+                img.scale(scaleFactor);
+                
                 canvas.add(overlayImage);
                 canvas.renderAll(); // Re-render canvas to show the overlay
                 console.log('Overlay image added to canvas.');
@@ -65,9 +70,14 @@ document.addEventListener("DOMContentLoaded", function() {
                         top: 0,
                         selectable: false // Disable image dragging
                     });
-                    canvas.clear(); // Clear any previous content before adding the new image
-                    img.scaleToWidth(canvas.width); // Scale image to fit the canvas width
-                    img.scaleToHeight(canvas.height); // Scale image to fit the canvas height
+
+                    // Clear any previous content
+                    canvas.clear();
+
+                    // Scale the uploaded image to fit within the fixed canvas size
+                    const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
+                    img.scale(scaleFactor);
+
                     canvas.add(uploadedImage);
                     canvas.renderAll(); // Re-render the canvas to show the uploaded image
                     console.log('Uploaded image added to canvas.');
