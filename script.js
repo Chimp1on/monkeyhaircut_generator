@@ -39,6 +39,7 @@ window.onload = function() {
                     selectable: true
                 });
                 canvas.add(overlayImage);
+                canvas.renderAll(); // Re-render canvas to show the overlay
             });
         }
     });
@@ -55,8 +56,9 @@ window.onload = function() {
                         top: 0,
                         selectable: false // Disable image dragging
                     });
-                    canvas.clear(); // Clear any previous content
+                    canvas.clear(); // Clear any previous content before adding the new image
                     canvas.add(uploadedImage);
+                    canvas.renderAll(); // Re-render the canvas to show the uploaded image
                 });
             };
             reader.readAsDataURL(file);
