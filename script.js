@@ -43,10 +43,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 overlayImage = img.set({
                     left: 100,
                     top: 100,
-                    selectable: true // Make it selectable
+                    selectable: true,  // Make the overlay image selectable
+                    transparentCorners: false // Ensure corners are not transparent
                 });
 
-                // Ensure control points are visible and customize appearance
+                // Set control points visibility immediately
                 overlayImage.setControlsVisibility({
                     tl: true, // Top-left
                     tr: true, // Top-right
@@ -63,16 +64,17 @@ document.addEventListener("DOMContentLoaded", function() {
                     borderColor: 'red',           // Control points border color
                     cornerColor: 'blue',          // Control points color
                     cornerSize: 12,               // Size of control points
-                    transparentCorners: false,    // Disable transparent corners
-                    cornerStrokeColor: 'black'    // Color of the border around control points
+                    cornerStrokeColor: 'black',   // Border color of the control points
                 });
 
                 // Scale the overlay to fit within the canvas
                 const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
                 img.scale(scaleFactor);
 
+                // Ensure the overlay image is selectable and focused
                 canvas.add(overlayImage);
-                canvas.renderAll(); // Re-render canvas to show the overlay
+                canvas.setActiveObject(overlayImage); // Set the overlay image as active
+                canvas.renderAll(); // Force canvas to re-render and show control points immediately
                 console.log('Overlay image added to canvas.');
             });
         }
