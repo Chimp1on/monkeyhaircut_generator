@@ -63,31 +63,31 @@ window.onload = function() {
         }
     });
 
-    // Rotate and flip functionality
+    // Rotate and flip functionality for overlay image
     document.getElementById('rotate-left').addEventListener('click', function() {
-        if (uploadedImage) {
-            uploadedImage.rotate(uploadedImage.angle - 90);
+        if (overlayImage) {
+            overlayImage.rotate(overlayImage.angle - 90);
             canvas.renderAll();
         }
     });
 
     document.getElementById('rotate-right').addEventListener('click', function() {
-        if (uploadedImage) {
-            uploadedImage.rotate(uploadedImage.angle + 90);
+        if (overlayImage) {
+            overlayImage.rotate(overlayImage.angle + 90);
             canvas.renderAll();
         }
     });
 
     document.getElementById('flip-horizontal').addEventListener('click', function() {
-        if (uploadedImage) {
-            uploadedImage.set('flipX', !uploadedImage.flipX);
+        if (overlayImage) {
+            overlayImage.set('flipX', !overlayImage.flipX);
             canvas.renderAll();
         }
     });
 
     document.getElementById('flip-vertical').addEventListener('click', function() {
-        if (uploadedImage) {
-            uploadedImage.set('flipY', !uploadedImage.flipY);
+        if (overlayImage) {
+            overlayImage.set('flipY', !overlayImage.flipY);
             canvas.renderAll();
         }
     });
