@@ -3,24 +3,19 @@ document.addEventListener("DOMContentLoaded", function() {
     let undoStack = [];
     let redoStack = [];
 
-    // Fixed canvas size
-    const canvasWidth = window.innerWidth * 0.9; // 90% of the screen width
-    const canvasHeight = window.innerHeight * 0.7; // 70% of the screen height
-
-    // Initialize the canvas
+    // Initialize the canvas with fixed dimensions
     canvas = new fabric.Canvas('meme-canvas', {
-        width: canvasWidth,
-        height: canvasHeight,
+        width: window.innerWidth * 0.9,
+        height: window.innerHeight * 0.7,
         backgroundColor: '#fff',
     });
-    console.log('Canvas initialized with fixed size: ', canvasWidth, canvasHeight);
+    console.log('Canvas initialized:', canvas.width, canvas.height);
 
-    // Fetch overlay images from overlays.json
+    // Fetch overlay images
     fetch('starter_pack/overlays.json')
         .then(response => response.json())
         .then(images => {
             const overlaySelector = document.getElementById('overlay-selector');
-            // Populate the dropdown with overlay images
             images.forEach(image => {
                 const option = document.createElement('option');
                 option.value = `starter_pack/${image}`;
@@ -29,26 +24,23 @@ document.addEventListener("DOMContentLoaded", function() {
             });
             console.log('Overlay images loaded:', images);
         })
-        .catch(error => {
-            console.error('Error loading overlays:', error);
-        });
+        .catch(error => console.error('Error loading overlays:', error));
 
-    // Save current state for undo/redo
+    // Save canvas state for undo/redo
     function saveState() {
         undoStack.push(canvas.toJSON());
-        redoStack = []; // Clear redo stack whenever we make a new change
-        console.log('State saved to undo stack.');
+        redoStack = [];
+        console.log('State saved.');
     }
 
-    // Add event listener for overlay selection
+    // Overlay selection and placement
     document.getElementById('overlay-selector').addEventListener('change', function(e) {
         const overlayUrl = e.target.value;
         if (overlayUrl) {
-            console.log('Selected overlay:', overlayUrl);
+            console.log('Loading overlay:', overlayUrl);
             fabric.Image.fromURL(overlayUrl, function(img) {
-                if (overlayImage) {
-                    canvas.remove(overlayImage); // Remove previous overlay if it exists
-                }
+                if (overlayImage) canvas.remove(overlayImage);
+
                 overlayImage = img.set({
                     left: 100,
                     top: 100,
@@ -56,54 +48,50 @@ document.addEventListener("DOMContentLoaded", function() {
                     transparentCorners: false,
                 });
 
-                // Styling control points for visibility
+                // Set visibility and styles for control points
                 overlayImage.setControlsVisibility({
-                    tl: true, tr: true, bl: true, br: true, mt: true, mb: true, ml: true, mr: true
+                    mt: true, mb: true, ml: true, mr: true, tl: true, tr: true, bl: true, br: true,
                 });
                 overlayImage.set({
                     borderColor: 'red',
                     cornerColor: 'blue',
                     cornerSize: 12,
-                    cornerStrokeColor: 'black',
-                    padding: 10
+                    padding: 10,
                 });
 
-                // Scale the overlay to fit within the canvas
                 const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
                 img.scale(scaleFactor);
 
-                // Add overlay to canvas and activate it to show control points
                 canvas.add(overlayImage);
                 canvas.setActiveObject(overlayImage);
                 canvas.renderAll();
-                console.log('Overlay image added and activated on canvas.');
+                console.log('Overlay added and scaled.');
                 saveState();
             });
         }
     });
 
-    // Handle image upload
+    // Image upload
     document.getElementById('upload-image').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
-            console.log('Uploading image:', file);
             const reader = new FileReader();
             reader.onload = function(event) {
                 fabric.Image.fromURL(event.target.result, function(img) {
                     uploadedImage = img.set({
                         left: 0,
                         top: 0,
-                        selectable: false
+                        selectable: false,
                     });
 
-                    // Clear previous content and scale uploaded image
                     canvas.clear();
                     const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
                     img.scale(scaleFactor);
 
                     canvas.add(uploadedImage);
+                    canvas.centerObject(uploadedImage);
                     canvas.renderAll();
-                    console.log('Uploaded image added to canvas.');
+                    console.log('Image uploaded and centered.');
                     saveState();
                 });
             };
@@ -111,13 +99,13 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Flip functionality for overlay image
+    // Flip buttons
     document.getElementById('flip-horizontal').addEventListener('click', function() {
         if (overlayImage) {
             overlayImage.set('flipX', !overlayImage.flipX);
             canvas.renderAll();
             saveState();
-            console.log('Overlay image flipped horizontally.');
+            console.log('Overlay flipped horizontally.');
         }
     });
 
@@ -126,35 +114,30 @@ document.addEventListener("DOMContentLoaded", function() {
             overlayImage.set('flipY', !overlayImage.flipY);
             canvas.renderAll();
             saveState();
-            console.log('Overlay image flipped vertically.');
+            console.log('Overlay flipped vertically.');
         }
     });
 
-    // Undo functionality
+    // Undo and Redo
     document.getElementById('undo-button').addEventListener('click', function() {
         if (undoStack.length > 0) {
             redoStack.push(canvas.toJSON());
             const lastState = undoStack.pop();
-            canvas.loadFromJSON(lastState, () => {
-                canvas.renderAll();
-                console.log('Undo: Canvas reverted to previous state.');
-            });
+            canvas.loadFromJSON(lastState, () => canvas.renderAll());
+            console.log('Undo performed.');
         }
     });
 
-    // Redo functionality
     document.getElementById('redo-button').addEventListener('click', function() {
         if (redoStack.length > 0) {
             undoStack.push(canvas.toJSON());
             const nextState = redoStack.pop();
-            canvas.loadFromJSON(nextState, () => {
-                canvas.renderAll();
-                console.log('Redo: Canvas advanced to next state.');
-            });
+            canvas.loadFromJSON(nextState, () => canvas.renderAll());
+            console.log('Redo performed.');
         }
     });
 
-    // Download meme image
+    // Download button
     document.getElementById('download-button').addEventListener('click', function() {
         const dataUrl = canvas.toDataURL('image/png');
         const link = document.createElement('a');
@@ -162,5 +145,17 @@ document.addEventListener("DOMContentLoaded", function() {
         link.download = 'meme.png';
         link.click();
         console.log('Meme downloaded.');
+    });
+
+    // Handle window resizing
+    window.addEventListener('resize', () => {
+        const newWidth = window.innerWidth * 0.9;
+        const newHeight = window.innerHeight * 0.7;
+        canvas.setWidth(newWidth);
+        canvas.setHeight(newHeight);
+        if (uploadedImage) uploadedImage.scaleToWidth(newWidth);
+        if (overlayImage) overlayImage.scaleToWidth(newWidth * 0.5);
+        canvas.renderAll();
+        console.log('Canvas resized.');
     });
 });
