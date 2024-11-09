@@ -82,9 +82,18 @@ document.addEventListener("DOMContentLoaded", function() {
                     // Log the image size after scaling
                     console.log('Uploaded image scaled: ', img.width * scaleFactor, img.height * scaleFactor);
 
+                    // Log the image position
+                    console.log('Image Position - left:', img.left, 'top:', img.top);
+
+                    // Ensure the image is within the canvas bounds
+                    img.set({
+                        left: Math.max(0, Math.min(img.left, canvas.width - img.width * scaleFactor)),
+                        top: Math.max(0, Math.min(img.top, canvas.height - img.height * scaleFactor))
+                    });
+
                     // Add image to canvas
                     canvas.add(uploadedImage);
-                    canvas.renderAll(); // Re-render the canvas to show the uploaded image
+                    canvas.renderAll(); // Force re-render of the canvas
 
                     console.log('Uploaded image added to canvas.');
                 });
