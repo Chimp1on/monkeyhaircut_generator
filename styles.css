@@ -16,18 +16,22 @@ body {
     display: flex;
     justify-content: center;
     margin: 10px 0;
+    width: 100%; /* Ensure it takes full width */
 }
 
 #canvas-wrapper {
     border: 2px solid #ddd;
     overflow: hidden;
     padding: 10px; /* Add padding to prevent clipping */
-    max-width: 100%;
+    width: 100%; /* Ensure it takes full width */
+    max-width: 1804px; /* Optional: limit the max width */
 }
 
 canvas {
     background-color: #fff;
     border: 1px solid #ccc;
+    width: 100% !important; /* Ensure canvas stretches */
+    height: auto !important; /* Maintain aspect ratio */
 }
 
 .controls {
@@ -55,11 +59,19 @@ button, select, input[type="file"] {
     }
 }
 
-/* Overlay control point styling */
-.canvas-container .corner {
+/* Overlay control point styling - updated for Fabric.js control points */
+.canvas-container .fabric-canvas .corner {
     background-color: blue !important;
     border: 2px solid red !important;
     width: 12px !important;
     height: 12px !important;
     border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Optional: Add extra styling for canvas container for better layout */
+#canvas-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
