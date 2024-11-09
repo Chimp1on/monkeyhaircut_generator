@@ -1,93 +1,52 @@
-/* Basic reset for margins and padding */
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
 
-/* Container for the canvas */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+
 #canvas-container {
-    width: 100%;
-    height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
-    background-color: #f4f4f4; /* Light background color */
-    overflow: hidden; /* Prevent canvas overflow */
+    margin: 10px 0;
 }
 
-/* Canvas wrapper */
 #canvas-wrapper {
-    position: relative;
-    max-width: 100%;
-    max-height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    border: 2px solid #ddd;
+    overflow: hidden;
 }
 
-/* Canvas styling */
-#canvas-container canvas {
-    display: block;
-    max-width: 100%;
-    max-height: 100%;
-}
-
-/* Controls */
-.controls {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.8);
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-/* Controls layout */
-.controls input,
-.controls select,
-.controls button {
-    font-size: 14px;
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+canvas {
     background-color: #fff;
-    cursor: pointer;
+    border: 1px solid #ccc;
 }
 
-.controls button {
-    background-color: #007bff;
-    color: #fff;
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 }
 
-.controls button:hover {
-    background-color: #0056b3;
+button, select, input[type="file"] {
+    padding: 8px 12px;
+    font-size: 14px;
+    margin-top: 5px;
 }
 
-.controls select {
-    width: 200px;
-}
-
-.controls input[type="file"] {
-    font-size: 12px;
-}
-
-/* Ensure mobile responsiveness */
 @media (max-width: 600px) {
+    canvas {
+        width: 100%;
+    }
     .controls {
         flex-direction: column;
-        gap: 5px;
-    }
-
-    .controls input,
-    .controls select,
-    .controls button {
-        width: 100%;
+        gap: 8px;
     }
 }
