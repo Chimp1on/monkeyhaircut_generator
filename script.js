@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     cornerColor: 'blue',          // Control points color
                     cornerSize: 12,               // Size of control points
                     cornerStrokeColor: 'black',   // Border color of the control points
+                    padding: 10                   // Padding to ensure control points are visible
                 });
 
                 // Scale the overlay to fit within the canvas
