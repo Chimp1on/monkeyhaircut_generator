@@ -1,0 +1,25 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+#upload-image {
+    margin: 20px;
+}
+
+#overlay-selector {
+    margin: 20px;
+}
+
+.controls {
+    margin: 20px;
+}
+
+button {
+    margin: 5px;
+}
+
+canvas {
+    border: 1px solid #ccc;
+    margin-top: 20px;
+}
