@@ -63,21 +63,7 @@ window.onload = function() {
         }
     });
 
-    // Rotate and flip functionality for overlay image
-    document.getElementById('rotate-left').addEventListener('click', function() {
-        if (overlayImage) {
-            overlayImage.rotate(overlayImage.angle - 90);
-            canvas.renderAll();
-        }
-    });
-
-    document.getElementById('rotate-right').addEventListener('click', function() {
-        if (overlayImage) {
-            overlayImage.rotate(overlayImage.angle + 90);
-            canvas.renderAll();
-        }
-    });
-
+    // Flip functionality for overlay image
     document.getElementById('flip-horizontal').addEventListener('click', function() {
         if (overlayImage) {
             overlayImage.set('flipX', !overlayImage.flipX);
