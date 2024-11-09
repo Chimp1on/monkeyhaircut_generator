@@ -5,30 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meme Generator</title>
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Fabric.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js" defer></script>
 </head>
 <body>
-    <div class="controls">
-        <input type="file" id="upload-image" accept="image/*">
-        <select id="overlay-selector">
-            <option value="">Select Overlay</option>
-        </select>
-        <button id="flip-horizontal">Flip Horizontal</button>
-        <button id="flip-vertical">Flip Vertical</button>
-        <button id="download-button">Download Meme</button>
-        <button id="undo-button">Undo</button>
-        <button id="redo-button">Redo</button>
-    </div>
-
     <div id="canvas-container">
         <div id="canvas-wrapper">
             <canvas id="meme-canvas"></canvas>
         </div>
     </div>
+    
+    <div class="controls">
+        <input type="file" id="upload-image" accept="image/*">
+        
+        <select id="overlay-selector">
+            <option value="">Select an overlay image</option>
+        </select>
+        
+        <button id="flip-horizontal">Flip Horizontal</button>
+        <button id="flip-vertical">Flip Vertical</button>
+        <button id="download-button">Download Meme</button>
+    </div>
 
-    <!-- Include fabric.js CDN here -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
-
-    <!-- Your custom script here -->
-    <script src="script.js"></script>
+    <!-- Custom Script -->
+    <script src="script.js" defer></script>
 </body>
 </html>
