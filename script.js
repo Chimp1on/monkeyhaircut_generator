@@ -1,12 +1,13 @@
-let canvas, uploadedImage, overlayImage;
+document.addEventListener("DOMContentLoaded", function() {
+    let canvas, uploadedImage, overlayImage;
 
-// Initialize the canvas
-window.onload = function() {
+    // Initialize the canvas
     canvas = new fabric.Canvas('meme-canvas', {
         width: window.innerWidth * 0.8,
         height: window.innerHeight * 0.6,
         backgroundColor: '#fff',
     });
+    console.log('Canvas initialized.');
 
     // Fetch overlay images from overlays.json
     fetch('starter_pack/overlays.json')
@@ -20,6 +21,7 @@ window.onload = function() {
                 option.textContent = image;
                 overlaySelector.appendChild(option);
             });
+            console.log('Overlay images loaded:', images);
         })
         .catch(error => {
             console.error('Error loading overlays:', error);
@@ -29,6 +31,7 @@ window.onload = function() {
     document.getElementById('overlay-selector').addEventListener('change', function(e) {
         const overlayUrl = e.target.value;
         if (overlayUrl) {
+            console.log('Selected overlay:', overlayUrl);
             fabric.Image.fromURL(overlayUrl, function(img) {
                 if (overlayImage) {
                     canvas.remove(overlayImage); // Remove previous overlay if it exists
@@ -40,6 +43,7 @@ window.onload = function() {
                 });
                 canvas.add(overlayImage);
                 canvas.renderAll(); // Re-render canvas to show the overlay
+                console.log('Overlay image added to canvas.');
             });
         }
     });
@@ -48,6 +52,7 @@ window.onload = function() {
     document.getElementById('upload-image').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
+            console.log('Uploading image:', file);
             const reader = new FileReader();
             reader.onload = function(event) {
                 fabric.Image.fromURL(event.target.result, function(img) {
@@ -59,6 +64,7 @@ window.onload = function() {
                     canvas.clear(); // Clear any previous content before adding the new image
                     canvas.add(uploadedImage);
                     canvas.renderAll(); // Re-render the canvas to show the uploaded image
+                    console.log('Uploaded image added to canvas.');
                 });
             };
             reader.readAsDataURL(file);
@@ -70,6 +76,7 @@ window.onload = function() {
         if (overlayImage) {
             overlayImage.set('flipX', !overlayImage.flipX);
             canvas.renderAll();
+            console.log('Overlay image flipped horizontally.');
         }
     });
 
@@ -77,6 +84,7 @@ window.onload = function() {
         if (overlayImage) {
             overlayImage.set('flipY', !overlayImage.flipY);
             canvas.renderAll();
+            console.log('Overlay image flipped vertically.');
         }
     });
 
@@ -87,5 +95,6 @@ window.onload = function() {
         link.href = dataUrl;
         link.download = 'meme.png';
         link.click();
+        console.log('Meme downloaded.');
     });
-};
+});
