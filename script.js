@@ -3,15 +3,15 @@ document.addEventListener("DOMContentLoaded", function() {
     let undoStack = [];
     let redoStack = [];
 
-    // Initialize the canvas
+    // Initialize the canvas with set dimensions
     canvas = new fabric.Canvas('meme-canvas', {
         width: window.innerWidth * 0.9,
         height: window.innerHeight * 0.7,
-        backgroundColor: '#e0e0e0', // Light background to confirm visibility
+        backgroundColor: '#e0e0e0',
     });
     console.log('Canvas initialized:', canvas.width, canvas.height);
 
-    // Fetch overlay images
+    // Fetch overlay images from overlays.json
     fetch('starter_pack/overlays.json')
         .then(response => response.json())
         .then(images => {
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log('State saved.');
     }
 
-    // Image upload and rendering
+    // Handle image upload and rendering
     document.getElementById('upload-image').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
@@ -44,14 +44,21 @@ document.addEventListener("DOMContentLoaded", function() {
                         left: 0,
                         top: 0,
                         selectable: false,
+                        opacity: 1,  // Ensure image opacity is fully visible
                     });
 
-                    canvas.clear(); // Clear canvas before adding new image
-                    canvas.add(uploadedImage); // Add uploaded image to canvas
-                    canvas.centerObject(uploadedImage); // Center the image
-                    uploadedImage.sendToBack(); // Ensure the uploaded image is at the back
+                    // Clear canvas before adding a new image
+                    canvas.clear();
+                    canvas.add(uploadedImage);
+                    canvas.centerObject(uploadedImage);
+                    uploadedImage.scaleToWidth(canvas.width); // Scale to canvas width
+                    uploadedImage.sendToBack(); // Ensure background image
                     canvas.renderAll(); // Explicitly render the canvas
                     console.log('Uploaded image added and centered.');
+
+                    // Log final dimensions to confirm visibility
+                    console.log('Image Dimensions:', uploadedImage.width, uploadedImage.height);
+                    console.log('Canvas Dimensions:', canvas.width, canvas.height);
                     saveState();
                 });
             };
@@ -64,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const overlayUrl = e.target.value;
         if (overlayUrl) {
             fabric.Image.fromURL(overlayUrl, function(img) {
-                if (overlayImage) canvas.remove(overlayImage); // Remove previous overlay
+                if (overlayImage) canvas.remove(overlayImage); // Remove any previous overlay
                 overlayImage = img.set({
                     left: 100,
                     top: 100,
@@ -74,14 +81,18 @@ document.addEventListener("DOMContentLoaded", function() {
                     cornerColor: 'blue',
                     cornerSize: 12,
                     padding: 10,
+                    opacity: 1,
                 });
 
                 const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
                 img.scale(scaleFactor);
                 canvas.add(overlayImage); // Add overlay image
                 canvas.setActiveObject(overlayImage); // Set active to show controls
-                canvas.renderAll(); // Re-render canvas to show overlay
+                canvas.renderAll(); // Explicitly render the canvas
                 console.log('Overlay added and scaled.');
+
+                // Log overlay dimensions
+                console.log('Overlay Dimensions:', overlayImage.width, overlayImage.height);
                 saveState();
             });
         }
