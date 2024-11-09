@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     let canvas, uploadedImage, overlayImage;
+    let undoStack = [];
+    let redoStack = [];
 
     // Fixed canvas size
     const canvasWidth = window.innerWidth * 0.9; // 90% of the screen width
@@ -31,6 +33,16 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error('Error loading overlays:', error);
         });
 
+    // Function to save current state to the undo stack
+    function saveState() {
+        const state = JSON.stringify(canvas.toJSON()); // Save canvas state
+        undoStack.push(state);
+        document.getElementById('undo-button').disabled = false; // Enable Undo button
+        redoStack = []; // Clear redo stack on new action
+        document.getElementById('redo-button').disabled = true; // Disable Redo button
+        console.log('State saved to undo stack');
+    }
+
     // Add event listener for overlay selection
     document.getElementById('overlay-selector').addEventListener('change', function(e) {
         const overlayUrl = e.target.value;
@@ -43,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 overlayImage = img.set({
                     left: 100,
                     top: 100,
-                    selectable: true,  // Make the overlay image selectable
+                    selectable: true, // Make the overlay image selectable
                     transparentCorners: false // Ensure corners are not transparent
                 });
 
@@ -71,11 +83,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
                 img.scale(scaleFactor);
 
-                // Ensure the overlay image is selectable and focused
                 canvas.add(overlayImage);
-                canvas.setActiveObject(overlayImage); // Set the overlay image as active
                 canvas.renderAll(); // Force canvas to re-render and show control points immediately
                 console.log('Overlay image added to canvas.');
+                saveState(); // Save state after overlay addition
             });
         }
     });
@@ -110,6 +121,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     canvas.add(uploadedImage);
                     canvas.renderAll(); // Re-render the canvas to show the uploaded image
                     console.log('Uploaded image added to canvas.');
+                    saveState(); // Save state after image upload
                 });
             };
             reader.readAsDataURL(file);
@@ -122,6 +134,7 @@ document.addEventListener("DOMContentLoaded", function() {
             overlayImage.set('flipX', !overlayImage.flipX);
             canvas.renderAll();
             console.log('Overlay image flipped horizontally.');
+            saveState(); // Save state after flipping
         }
     });
 
@@ -130,46 +143,28 @@ document.addEventListener("DOMContentLoaded", function() {
             overlayImage.set('flipY', !overlayImage.flipY);
             canvas.renderAll();
             console.log('Overlay image flipped vertically.');
+            saveState(); // Save state after flipping
         }
     });
 
-    // Download meme image
-    document.getElementById('download-button').addEventListener('click', function() {
-        const dataUrl = canvas.toDataURL('image/png');
-        const link = document.createElement('a');
-        link.href = dataUrl;
-        link.download = 'meme.png';
-        link.click();
-        console.log('Meme downloaded.');
+    // Undo functionality
+    document.getElementById('undo-button').addEventListener('click', function() {
+        if (undoStack.length > 0) {
+            const lastState = undoStack.pop();
+            redoStack.push(JSON.stringify(canvas.toJSON())); // Save the current state to redo stack
+            canvas.loadFromJSON(lastState, function() {
+                canvas.renderAll();
+                document.getElementById('redo-button').disabled = false; // Enable Redo button
+                if (undoStack.length === 0) {
+                    document.getElementById('undo-button').disabled = true; // Disable Undo button if empty
+                }
+                console.log('Undo performed');
+            });
+        }
     });
 
-    // Resize the canvas when window is resized and rescale the images
-    window.addEventListener('resize', function() {
-        const newCanvasWidth = window.innerWidth * 0.9;
-        const newCanvasHeight = window.innerHeight * 0.7;
-
-        canvas.setWidth(newCanvasWidth);
-        canvas.setHeight(newCanvasHeight);
-
-        console.log('Canvas resized:', newCanvasWidth, newCanvasHeight);
-
-        // Re-scale images to fit the new canvas size while maintaining their aspect ratio
-        if (uploadedImage) {
-            const scaleFactor = Math.min(newCanvasWidth / uploadedImage.width, newCanvasHeight / uploadedImage.height);
-            uploadedImage.scale(scaleFactor);
-
-            // Adjust the position of the image to keep it centered
-            const left = (newCanvasWidth - uploadedImage.getScaledWidth()) / 2;
-            const top = (newCanvasHeight - uploadedImage.getScaledHeight()) / 2;
-
-            uploadedImage.set({ left: left, top: top });
-        }
-
-        if (overlayImage) {
-            const scaleFactor = Math.min(newCanvasWidth / overlayImage.width, newCanvasHeight / overlayImage.height);
-            overlayImage.scale(scaleFactor);
-        }
-
-        canvas.renderAll(); // Re-render the canvas
-    });
-});
+    // Redo functionality
+    document.getElementById('redo-button').addEventListener('click', function() {
+        if (redoStack.length > 0) {
+            const lastState = redoStack.pop();
+            undoStack.push(JSON.stringify(canvas.toJSON())); // Save current state to undo
