@@ -1,18 +1,16 @@
-document.addEventListener("DOMContentLoaded", function () {
-    let canvas, uploadedImage, overlayImage, history = [];
-    const canvasContainer = document.getElementById('canvas-wrapper');
-    const canvasWidth = window.innerWidth * 0.9;
-    const canvasHeight = window.innerHeight * 0.7;
+document.addEventListener("DOMContentLoaded", function() {
+    let canvas, uploadedImage, overlayImage;
+    let stateStack = [], redoStack = [];
 
-    // Initialize Fabric.js Canvas
+    // Canvas setup
     canvas = new fabric.Canvas('meme-canvas', {
-        width: canvasWidth,
-        height: canvasHeight,
+        width: 1804.5,
+        height: 913.5,
         backgroundColor: '#fff',
     });
-    console.log('Canvas initialized:', canvasWidth, canvasHeight);
+    console.log('Canvas initialized:', canvas.width, canvas.height);
 
-    // Load overlay images from JSON
+    // Load overlay images from overlays.json
     fetch('starter_pack/overlays.json')
         .then(response => response.json())
         .then(images => {
@@ -24,85 +22,105 @@ document.addEventListener("DOMContentLoaded", function () {
                 overlaySelector.appendChild(option);
             });
             console.log('Overlay images loaded:', images);
+        })
+        .catch(error => {
+            console.error('Error loading overlays:', error);
         });
 
-    // Handle image upload
-    document.getElementById('upload-image').addEventListener('change', function (e) {
+    // Image upload handling
+    document.getElementById('upload-image').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function (event) {
-                fabric.Image.fromURL(event.target.result, function (img) {
-                    canvas.clear();
-                    uploadedImage = img.set({
-                        left: 0,
-                        top: 0,
-                        selectable: false,
+            reader.onload = function(event) {
+                fabric.Image.fromURL(event.target.result, function(img) {
+                    uploadedImage = img;
+                    uploadedImage.set({
+                        left: canvas.width / 2 - img.width / 2,
+                        top: canvas.height / 2 - img.height / 2,
+                        selectable: false
                     });
 
-                    // Scale and center image
-                    const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
-                    img.scale(scaleFactor);
-                    img.set({
-                        left: (canvas.width - img.getScaledWidth()) / 2,
-                        top: (canvas.height - img.getScaledHeight()) / 2,
-                    });
+                    // Clear canvas and add uploaded image
+                    canvas.clear();
                     canvas.add(uploadedImage);
-                    canvas.renderAll();
-                    console.log('Uploaded image added and centered.');
-                    console.log('Image Dimensions:', img.getScaledWidth(), img.getScaledHeight());
-                    console.log('Canvas Dimensions:', canvas.width, canvas.height);
                     saveState();
+                    console.log('Uploaded image added and centered.');
+                    console.log('Image Dimensions:', img.width, img.height);
+                    console.log('Canvas Dimensions:', canvas.width, canvas.height);
                 });
             };
             reader.readAsDataURL(file);
         }
     });
 
-    // Overlay selection and manipulation
-    document.getElementById('overlay-selector').addEventListener('change', function (e) {
+    // Overlay selection and positioning
+    document.getElementById('overlay-selector').addEventListener('change', function(e) {
         const overlayUrl = e.target.value;
         if (overlayUrl) {
-            fabric.Image.fromURL(overlayUrl, function (img) {
-                if (overlayImage) {
-                    canvas.remove(overlayImage);
-                }
+            fabric.Image.fromURL(overlayUrl, function(img) {
+                if (overlayImage) canvas.remove(overlayImage);
                 overlayImage = img.set({
-                    left: 100,
-                    top: 100,
+                    left: canvas.width / 2 - img.width / 2,
+                    top: canvas.height / 2 - img.height / 2,
                     selectable: true,
+                    hasControls: true,
+                    opacity: 0.8 // semi-transparent for visibility
                 });
-
-                // Scale overlay and add to canvas
-                const overlayScale = Math.min(canvas.width / img.width, canvas.height / img.height);
-                img.scale(overlayScale);
+                
                 canvas.add(overlayImage);
-                canvas.setActiveObject(overlayImage);
+                overlayImage.bringToFront();
+                overlayImage.setCoords();
                 canvas.renderAll();
-                console.log('Overlay added and scaled.');
-                console.log('Overlay Dimensions:', overlayImage.getScaledWidth(), overlayImage.getScaledHeight());
                 saveState();
+                console.log('Overlay added and scaled.');
             });
         }
     });
 
-    // Undo and Redo functionality
+    // Undo and Redo functions
     function saveState() {
-        const state = JSON.stringify(canvas.toJSON());
-        history.push(state);
+        stateStack.push(JSON.stringify(canvas));
+        redoStack = []; // clear redo stack
         console.log('State saved.');
     }
 
-    document.getElementById('undo').addEventListener('click', function () {
-        if (history.length > 1) {
-            history.pop(); // Remove current state
-            const prevState = history[history.length - 1];
-            canvas.loadFromJSON(prevState, canvas.renderAll.bind(canvas));
+    document.getElementById('undo').addEventListener('click', function() {
+        if (stateStack.length > 1) {
+            redoStack.push(stateStack.pop());
+            canvas.clear();
+            canvas.loadFromJSON(stateStack[stateStack.length - 1]);
             console.log('Undo performed.');
         }
     });
 
-    document.getElementById('download-button').addEventListener('click', function () {
+    document.getElementById('redo').addEventListener('click', function() {
+        if (redoStack.length > 0) {
+            stateStack.push(redoStack.pop());
+            canvas.clear();
+            canvas.loadFromJSON(stateStack[stateStack.length - 1]);
+            console.log('Redo performed.');
+        }
+    });
+
+    // Additional event handlers: Flip, Download
+    document.getElementById('flip-horizontal').addEventListener('click', function() {
+        if (overlayImage) {
+            overlayImage.toggle('flipX');
+            canvas.renderAll();
+            saveState();
+        }
+    });
+
+    document.getElementById('flip-vertical').addEventListener('click', function() {
+        if (overlayImage) {
+            overlayImage.toggle('flipY');
+            canvas.renderAll();
+            saveState();
+        }
+    });
+
+    document.getElementById('download-button').addEventListener('click', function() {
         const dataUrl = canvas.toDataURL('image/png');
         const link = document.createElement('a');
         link.href = dataUrl;
