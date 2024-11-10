@@ -7,18 +7,19 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Canvas Overlay Meme Maker</h1>
+    <!-- Header container for centering title and file input -->
+    <div id="header-container">
+        <h1>Canvas Overlay Meme Maker</h1>
 
-    <!-- File selection for the background image -->
-    <div>
-        <input type="file" id="upload-image" accept="image/*" />
+        <!-- File selection for the background image -->
+        <div id="file-upload-container">
+            <input type="file" id="upload-image" accept="image/*" />
+        </div>
     </div>
 
     <!-- Controls section -->
     <div class="controls">
-        <!-- Button for opening the overlay selection modal -->
         <button id="overlay-button">Select Overlay</button>
-
         <button id="flip-horizontal">Flip Horizontal</button>
         <button id="flip-vertical">Flip Vertical</button>
         <button id="download-button">Download Meme</button>
@@ -43,4 +44,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>
