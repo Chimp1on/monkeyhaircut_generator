@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
             canvas.setWidth(windowHeight * imageAspectRatio);
         }
 
-        canvas.renderAll(); // Render changes to canvas size
+        canvas.renderAll();
         console.log('Canvas resized to match image aspect ratio:', canvas.width, canvas.height);
     }
 
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     // Clear and add the new image to the canvas
                     canvas.clear();
                     canvas.add(uploadedImage);
-                    canvas.renderAll(); // Re-render the canvas to show the uploaded image
+                    canvas.renderAll();
                     console.log('Uploaded image added to canvas.');
                 });
             };
@@ -93,6 +93,21 @@ document.addEventListener("DOMContentLoaded", function() {
                     top: 100,
                     selectable: true,
                     transparentCorners: false,
+                    borderColor: 'red',
+                    cornerColor: 'blue',
+                    cornerSize: 12,
+                    cornerStrokeColor: 'black'
+                });
+
+                overlayImage.setControlsVisibility({
+                    tl: true,
+                    tr: true,
+                    bl: true,
+                    br: true,
+                    mt: true,
+                    mb: true,
+                    ml: true,
+                    mr: true
                 });
 
                 // Scale the overlay to fit within the resized canvas
@@ -102,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 canvas.add(overlayImage);
                 canvas.setActiveObject(overlayImage);
                 canvas.renderAll();
-                console.log('Overlay image added to canvas.');
+                console.log('Overlay image added to canvas with custom control styling.');
             });
         }
     });
@@ -139,7 +154,6 @@ document.addEventListener("DOMContentLoaded", function() {
         if (uploadedImage) {
             resizeCanvasToImage(uploadedImage);
 
-            // Re-scale and re-center uploaded image to fit the new canvas size
             const scaleFactor = Math.min(canvas.width / uploadedImage.width, canvas.height / uploadedImage.height);
             uploadedImage.scale(scaleFactor);
 
@@ -153,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function() {
             overlayImage.scale(scaleFactor);
         }
 
-        canvas.renderAll(); // Re-render the canvas
+        canvas.renderAll();
         console.log('Canvas and images resized on window resize.');
     });
 });
