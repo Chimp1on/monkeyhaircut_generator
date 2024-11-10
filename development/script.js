@@ -72,10 +72,10 @@ document.addEventListener("DOMContentLoaded", function() {
     function addDeleteControl(img) {
         img.controls = fabric.Object.prototype.controls;
         img.controls.deleteControl = new fabric.Control({
-            x: 0.5,
-            y: -0.5,
-            offsetX: 10,
-            offsetY: -10,
+            x: 0.6,   // Position further out horizontally
+            y: -0.6,  // Position further out vertically
+            offsetX: 20,
+            offsetY: -20,
             cursorStyle: 'pointer',
             mouseUpHandler: () => {
                 canvas.remove(img);
@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     mb: true,
                     ml: true,
                     mr: true,
-                    mtr: false // Hide the rotation control
+                    mtr: true // Restore the rotation control
                 });
 
                 addDeleteControl(img); // Add custom delete control
