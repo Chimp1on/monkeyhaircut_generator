@@ -144,20 +144,33 @@ h1 {
 
 /* Close button (X) in modal */
 .close-btn {
-    color: #aaa;
-    font-size: 28px;
+    color: #fff;
+    font-size: 32px; /* Larger size for better visibility */
     font-weight: bold;
     position: absolute;
     right: 10px;
     top: 10px;
     cursor: pointer;
+    background-color: #ff0000; /* Red background */
+    border-radius: 50%;  /* Circular button */
+    width: 35px;  /* Increase size */
+    height: 35px;  /* Increase size */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transition: background-color 0.3s ease;
 }
 
 .close-btn:hover,
 .close-btn:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+    background-color: #cc0000; /* Darker red on hover */
+    transform: scale(1.1); /* Slightly enlarge on hover */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Slightly stronger shadow on hover */
+}
+
+.close-btn:focus {
+    outline: none; /* Remove outline on focus */
 }
 
 /* Thumbnails for overlay selection */
