@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
     let canvas, uploadedImage, overlayImage;
-    let scaleFactor = 1; // Current scale factor for the canvas
-    let lastDistance = 0; // Distance between two touch points during pinch gesture
 
     // Fixed canvas size
     const canvasWidth = window.innerWidth * 0.9; // 90% of the screen width
@@ -175,41 +173,12 @@ document.addEventListener("DOMContentLoaded", function() {
         canvas.renderAll(); // Re-render the canvas
     });
 
-    // Pinch-to-Zoom Gesture
-    let lastDistance = 0; // Distance between the two touch points
-
-    // Listen for touchstart
-    canvas.wrapperEl.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 2) {
-            lastDistance = getDistance(e.touches[0], e.touches[1]);
-            e.preventDefault(); // Prevent page scrolling
+    // Delete overlay functionality (just the active one)
+    document.getElementById('delete-overlay').addEventListener('click', function() {
+        if (overlayImage) {
+            canvas.remove(overlayImage);
+            overlayImage = null;
+            console.log('Overlay image deleted.');
         }
     });
-
-    // Listen for touchmove
-    canvas.wrapperEl.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 2) {
-            const newDistance = getDistance(e.touches[0], e.touches[1]);
-
-            // If there's a difference in distance, zoom the canvas accordingly
-            if (newDistance !== lastDistance) {
-                const scaleChange = newDistance / lastDistance;
-                scaleFactor *= scaleChange;
-                scaleFactor = Math.max(0.1, Math.min(scaleFactor, 3)); // Limit zoom range (between 10% and 300%)
-                canvas.setZoom(scaleFactor); // Zoom canvas
-                canvas.renderAll();
-            }
-
-            lastDistance = newDistance; // Update last distance
-            e.preventDefault(); // Prevent page scrolling
-        }
-    });
-
-    // Helper function to calculate distance between two touch points
-    function getDistance(touch1, touch2) {
-        return Math.sqrt(
-            Math.pow(touch2.pageX - touch1.pageX, 2) +
-            Math.pow(touch2.pageY - touch1.pageY, 2)
-        );
-    }
 });
