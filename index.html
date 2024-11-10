@@ -3,32 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meme Generator</title>
+    <title>Canvas Overlay Meme Maker</title>
     <link rel="stylesheet" href="styles.css">
-
-    <!-- Fabric.js Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js" defer></script>
 </head>
 <body>
-    <div id="canvas-container">
-        <div id="canvas-wrapper">
-            <canvas id="meme-canvas"></canvas>
-        </div>
-    </div>
-    
+
+    <!-- Controls section -->
     <div class="controls">
-        <input type="file" id="upload-image" accept="image/*">
-        
-        <select id="overlay-selector">
-            <option value="">Select an overlay image</option>
-        </select>
-        
+        <input type="file" id="upload-image" accept="image/*" />
+        <button id="overlay-button">Select Overlay</button>
         <button id="flip-horizontal">Flip Horizontal</button>
         <button id="flip-vertical">Flip Vertical</button>
         <button id="download-button">Download Meme</button>
     </div>
 
-    <!-- Custom Script -->
-    <script src="script.js" defer></script>
+    <!-- Canvas container -->
+    <div id="canvas-container">
+        <div id="canvas-wrapper">
+            <canvas id="meme-canvas"></canvas>
+        </div>
+    </div>
+
+    <!-- Modal structure for selecting overlays -->
+    <div id="overlay-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3>Select an Overlay</h3>
+            <div id="overlay-thumbnails"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
