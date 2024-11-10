@@ -102,6 +102,13 @@ document.addEventListener("DOMContentLoaded", function() {
         modal.style.display = 'none';  // Hide the modal
     });
 
+    // Close the modal when clicking outside the modal content
+    modal.addEventListener("click", function(e) {
+        if (e.target === modal) {
+            modal.style.display = "none"; // Hide modal
+        }
+    });
+
     // Fetch overlay images and display thumbnails in modal
     fetch('starter_pack/overlays.json')
         .then(response => response.json())
