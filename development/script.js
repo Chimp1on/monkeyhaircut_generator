@@ -54,20 +54,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Fetch overlay images
-    fetch('starter_pack/overlays.json')
-        .then(response => response.json())
-        .then(images => {
-            const overlaySelector = document.getElementById('overlay-selector');
-            images.forEach(image => {
-                const option = document.createElement('option');
-                option.value = `starter_pack/${image}`;
-                option.textContent = image;
-                overlaySelector.appendChild(option);
-            });
-        })
-        .catch(error => console.error('Error loading overlays:', error));
-
     // Create delete control for each overlay
     function addDeleteControl(img) {
         img.controls = fabric.Object.prototype.controls;
@@ -101,45 +87,71 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Handle overlay selection
-    document.getElementById('overlay-selector').addEventListener('change', function(e) {
-        const overlayUrl = e.target.value;
-        if (overlayUrl) {
-            fabric.Image.fromURL(overlayUrl, function(img) {
-                img.set({
-                    left: 100,
-                    top: 100,
-                    selectable: true,
-                    transparentCorners: false,
-                    borderColor: 'red',
-                    cornerColor: 'blue',
-                    cornerSize: 12,
-                    cornerStrokeColor: 'black'
-                });
+    // Open modal for overlay selection
+    const overlayButton = document.getElementById('overlay-button');
+    const modal = document.getElementById('overlay-modal');
+    const modalClose = document.querySelector('.close-btn');
+    const overlayThumbnails = document.getElementById('overlay-thumbnails');
 
-                img.setControlsVisibility({
-                    tl: true,
-                    tr: true,
-                    bl: true,
-                    br: true,
-                    mt: true,
-                    mb: true,
-                    ml: true,
-                    mr: true,
-                    mtr: true // Enable rotation control
-                });
-
-                addDeleteControl(img); // Add individual delete control for each overlay
-
-                const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
-                img.scale(scaleFactor);
-
-                canvas.add(img);
-                canvas.setActiveObject(img);
-                canvas.renderAll();
-            });
-        }
+    overlayButton.addEventListener('click', function() {
+        modal.style.display = 'flex';  // Show the modal
     });
+
+    // Close modal
+    modalClose.addEventListener('click', function() {
+        modal.style.display = 'none';  // Hide the modal
+    });
+
+    // Fetch overlay images and display thumbnails in modal
+    fetch('starter_pack/overlays.json')
+        .then(response => response.json())
+        .then(images => {
+            images.forEach(image => {
+                const imgElement = document.createElement('img');
+                imgElement.src = `starter_pack/${image}`;
+                imgElement.alt = image;
+                imgElement.addEventListener('click', function() {
+                    fabric.Image.fromURL(imgElement.src, function(img) {
+                        img.set({
+                            left: 100,
+                            top: 100,
+                            selectable: true,
+                            transparentCorners: false,
+                            borderColor: 'red',
+                            cornerColor: 'blue',
+                            cornerSize: 12,
+                            cornerStrokeColor: 'black'
+                        });
+
+                        img.setControlsVisibility({
+                            tl: true,
+                            tr: true,
+                            bl: true,
+                            br: true,
+                            mt: true,
+                            mb: true,
+                            ml: true,
+                            mr: true,
+                            mtr: true // Enable rotation control
+                        });
+
+                        addDeleteControl(img); // Add individual delete control for each overlay
+
+                        const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
+                        img.scale(scaleFactor);
+
+                        canvas.add(img);
+                        canvas.setActiveObject(img);
+                        canvas.renderAll();
+
+                        modal.style.display = 'none';  // Close the modal after selecting the overlay
+                    });
+                });
+
+                overlayThumbnails.appendChild(imgElement);  // Add the thumbnail to the modal
+            });
+        })
+        .catch(error => console.error('Error loading overlays:', error));
 
     // Flip controls
     document.getElementById('flip-horizontal').addEventListener('click', function() {
