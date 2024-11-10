@@ -78,8 +78,11 @@ document.addEventListener("DOMContentLoaded", function() {
             offsetY: -20,
             cursorStyle: 'pointer',
             mouseUpHandler: function() {
-                canvas.remove(img);  // Remove the specific overlay
-                canvas.requestRenderAll();  // Re-render the canvas to reflect changes
+                const activeObject = canvas.getActiveObject();
+                if (activeObject) {
+                    canvas.remove(activeObject);  // Delete the currently active overlay
+                    canvas.requestRenderAll();  // Re-render the canvas to reflect changes
+                }
             },
             render: function(ctx, left, top, styleOverride, fabricObject) {
                 const size = 18;
