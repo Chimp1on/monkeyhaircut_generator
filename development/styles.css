@@ -5,28 +5,6 @@
     box-sizing: border-box;
 }
 
-/* Center content container (header and file selection) */
-#header-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 20vh; /* Ensure the header takes up a portion of the screen */
-    text-align: center;
-    padding: 20px;
-}
-
-/* Header styling */
-h1 {
-    font-size: 2rem;
-    margin-bottom: 10px;
-}
-
-/* File input section */
-#file-upload-container {
-    margin-bottom: 20px; /* Space between file input and controls */
-}
-
 /* Container for the canvas */
 #canvas-container {
     width: 100%;
@@ -73,7 +51,6 @@ h1 {
 
 /* Controls layout */
 .controls input,
-.controls select,
 .controls button {
     font-size: 14px;
     padding: 5px 10px;
@@ -92,10 +69,6 @@ h1 {
     background-color: #0056b3;
 }
 
-.controls select {
-    width: 200px;
-}
-
 .controls input[type="file"] {
     font-size: 12px;
 }
@@ -108,13 +81,8 @@ h1 {
     }
 
     .controls input,
-    .controls select,
     .controls button {
         width: 100%;
-    }
-
-    h1 {
-        font-size: 1.5rem; /* Smaller font for mobile */
     }
 }
 
