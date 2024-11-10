@@ -182,6 +182,7 @@ document.addEventListener("DOMContentLoaded", function() {
     canvas.wrapperEl.addEventListener('touchstart', (e) => {
         if (e.touches.length === 2) {
             lastDistance = getDistance(e.touches[0], e.touches[1]);
+            e.preventDefault(); // Prevent page scrolling
         }
     });
 
@@ -194,11 +195,13 @@ document.addEventListener("DOMContentLoaded", function() {
             if (newDistance !== lastDistance) {
                 const scaleChange = newDistance / lastDistance;
                 scaleFactor *= scaleChange;
+                scaleFactor = Math.max(0.1, Math.min(scaleFactor, 3)); // Limit zoom range (between 10% and 300%)
                 canvas.setZoom(scaleFactor); // Zoom canvas
                 canvas.renderAll();
             }
 
             lastDistance = newDistance; // Update last distance
+            e.preventDefault(); // Prevent page scrolling
         }
     });
 
