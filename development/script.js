@@ -74,12 +74,12 @@ document.addEventListener("DOMContentLoaded", function() {
         img.controls.deleteControl = new fabric.Control({
             x: 0.5,
             y: -0.5,
-            offsetX: 10,
-            offsetY: -10,
+            offsetX: 20,  // Move the delete control slightly further out
+            offsetY: -20,
             cursorStyle: 'pointer',
-            mouseUpHandler: () => {
-                canvas.remove(img);
-                canvas.requestRenderAll();
+            mouseUpHandler: function() {
+                canvas.remove(img);  // Remove the specific overlay
+                canvas.requestRenderAll();  // Re-render the canvas to reflect changes
             },
             render: function(ctx, left, top, styleOverride, fabricObject) {
                 const size = 18;
