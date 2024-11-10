@@ -68,21 +68,21 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .catch(error => console.error('Error loading overlays:', error));
 
-    // Create delete control
+    // Create delete control for each overlay
     function addDeleteControl(img) {
         img.controls = fabric.Object.prototype.controls;
         img.controls.deleteControl = new fabric.Control({
-            x: 0.6,   // Position further out horizontally
-            y: -0.6,  // Position further out vertically
-            offsetX: 20,
-            offsetY: -20,
+            x: 0.5,
+            y: -0.5,
+            offsetX: 10,
+            offsetY: -10,
             cursorStyle: 'pointer',
             mouseUpHandler: () => {
                 canvas.remove(img);
                 canvas.requestRenderAll();
             },
             render: function(ctx, left, top, styleOverride, fabricObject) {
-                const size = 24;
+                const size = 18;
                 ctx.save();
                 ctx.translate(left, top);
                 ctx.beginPath();
@@ -123,10 +123,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     mb: true,
                     ml: true,
                     mr: true,
-                    mtr: true // Restore the rotation control
+                    mtr: true // Enable rotation control
                 });
 
-                addDeleteControl(img); // Add custom delete control
+                addDeleteControl(img); // Add individual delete control for each overlay
 
                 const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
                 img.scale(scaleFactor);
