@@ -51,7 +51,6 @@
 
 /* Controls layout */
 .controls input,
-.controls select,
 .controls button {
     font-size: 14px;
     padding: 5px 10px;
@@ -70,10 +69,6 @@
     background-color: #0056b3;
 }
 
-.controls select {
-    width: 200px;
-}
-
 .controls input[type="file"] {
     font-size: 12px;
 }
@@ -86,8 +81,93 @@
     }
 
     .controls input,
-    .controls select,
     .controls button {
         width: 100%;
+    }
+}
+
+/* Modal for overlay selection */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal content */
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+    overflow-y: auto;
+}
+
+/* Close button (X) in modal */
+.close-btn {
+    color: #fff;
+    font-size: 32px; /* Larger size for better visibility */
+    font-weight: bold;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+    background-color: #ff0000; /* Red background */
+    border-radius: 50%;  /* Circular button */
+    width: 35px;  /* Increase size */
+    height: 35px;  /* Increase size */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transition: background-color 0.3s ease;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    background-color: #cc0000; /* Darker red on hover */
+    transform: scale(1.1); /* Slightly enlarge on hover */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Slightly stronger shadow on hover */
+}
+
+.close-btn:focus {
+    outline: none; /* Remove outline on focus */
+}
+
+/* Thumbnails for overlay selection */
+#overlay-thumbnails {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#overlay-thumbnails img {
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+#overlay-thumbnails img:hover {
+    transform: scale(1.1); /* Slight zoom on hover */
+}
+
+/* Ensure mobile responsiveness for the modal */
+@media (max-width: 600px) {
+    .modal-content {
+        width: 90%;
+    }
+
+    #overlay-thumbnails img {
+        width: 80%;
     }
 }
