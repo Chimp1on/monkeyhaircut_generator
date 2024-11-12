@@ -4,11 +4,13 @@
     padding: 0;
     box-sizing: border-box;
 }
+
 body {
     background-image: url('starter_pack/bgcollage.jpg');
     background-size: cover; /* Make sure the image covers the entire viewport */
     background-position: center;
     background-repeat: no-repeat; /* Prevent the image from tiling */
+    background-attachment: fixed; /* Keeps background fixed on scroll */
 }
 
 /* Container for the canvas */
@@ -94,7 +96,9 @@ body {
 
 /* Modal for overlay selection */
 .modal {
-    display: none; /* Hidden by default */
+    display: flex; /* Changed to flex for smoother fade effect */
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.3s ease; /* Smooth transition */
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -104,6 +108,11 @@ body {
     background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
     justify-content: center;
     align-items: center;
+}
+
+/* Class to show the modal */
+.modal.show {
+    opacity: 1; /* Fade in */
 }
 
 /* Modal content */
