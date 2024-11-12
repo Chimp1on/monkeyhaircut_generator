@@ -94,18 +94,18 @@ document.addEventListener("DOMContentLoaded", function() {
     const overlayThumbnails = document.getElementById('overlay-thumbnails');
 
     overlayButton.addEventListener('click', function() {
-        modal.classList.add('show');  // Show the modal with the 'show' class
+        modal.style.display = 'flex';
     });
 
     // Close modal
     modalClose.addEventListener('click', function() {
-        modal.classList.remove('show');  // Hide the modal by removing 'show' class
+        modal.style.display = 'none';
     });
 
     // Close the modal when clicking outside the modal content
     modal.addEventListener("click", function(e) {
         if (e.target === modal) {
-            modal.classList.remove("show");
+            modal.style.display = "none";
         }
     });
 
@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         canvas.setActiveObject(img);
                         canvas.renderAll();
 
-                        modal.classList.remove('show');
+                        modal.style.display = 'none';
                     });
                 });
 
