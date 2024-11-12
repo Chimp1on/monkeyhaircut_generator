@@ -4,6 +4,12 @@
     padding: 0;
     box-sizing: border-box;
 }
+body {
+    background-image: url('starter_pack/bgcollage.jpg');
+    background-size: cover; /* Make sure the image covers the entire viewport */
+    background-position: center;
+    background-repeat: no-repeat; /* Prevent the image from tiling */
+}
 
 /* Container for the canvas */
 #canvas-container {
