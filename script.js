@@ -60,14 +60,14 @@ document.addEventListener("DOMContentLoaded", function() {
         img.controls.deleteControl = new fabric.Control({
             x: 0.5,
             y: -0.5,
-            offsetX: 20,  // Move the delete control slightly further out
+            offsetX: 20,
             offsetY: -20,
             cursorStyle: 'pointer',
             mouseUpHandler: function() {
                 const activeObject = canvas.getActiveObject();
                 if (activeObject) {
-                    canvas.remove(activeObject);  // Delete the currently active overlay
-                    canvas.requestRenderAll();  // Re-render the canvas to reflect changes
+                    canvas.remove(activeObject);
+                    canvas.requestRenderAll();
                 }
             },
             render: function(ctx, left, top, styleOverride, fabricObject) {
@@ -94,18 +94,18 @@ document.addEventListener("DOMContentLoaded", function() {
     const overlayThumbnails = document.getElementById('overlay-thumbnails');
 
     overlayButton.addEventListener('click', function() {
-        modal.style.display = 'flex';  // Show the modal
+        modal.style.display = 'flex';
     });
 
     // Close modal
     modalClose.addEventListener('click', function() {
-        modal.style.display = 'none';  // Hide the modal
+        modal.style.display = 'none';
     });
 
     // Close the modal when clicking outside the modal content
     modal.addEventListener("click", function(e) {
         if (e.target === modal) {
-            modal.style.display = "none"; // Hide modal
+            modal.style.display = "none";
         }
     });
 
@@ -139,10 +139,10 @@ document.addEventListener("DOMContentLoaded", function() {
                             mb: true,
                             ml: true,
                             mr: true,
-                            mtr: true // Enable rotation control
+                            mtr: true
                         });
 
-                        addDeleteControl(img); // Add individual delete control for each overlay
+                        addDeleteControl(img);
 
                         const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
                         img.scale(scaleFactor);
@@ -151,11 +151,11 @@ document.addEventListener("DOMContentLoaded", function() {
                         canvas.setActiveObject(img);
                         canvas.renderAll();
 
-                        modal.style.display = 'none';  // Close the modal after selecting the overlay
+                        modal.style.display = 'none';
                     });
                 });
 
-                overlayThumbnails.appendChild(imgElement);  // Add the thumbnail to the modal
+                overlayThumbnails.appendChild(imgElement);
             });
         })
         .catch(error => console.error('Error loading overlays:', error));
