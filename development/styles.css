@@ -30,7 +30,7 @@ body::before {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.1); /* White with 10% opacity */
+    background-color: rgba(255, 255, 255, 0.35); /* White with 35% opacity */
     overflow: hidden; /* Prevent canvas overflow */
 }
 
