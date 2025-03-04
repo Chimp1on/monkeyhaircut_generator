@@ -19,7 +19,7 @@ body::before {
     height: 100%;
     background: url('starter_pack/bgcollage.jpg') no-repeat center center fixed;
     background-size: cover;
-    opacity: 0.5; /* Adjust opacity as needed */
+    opacity: 1; /* Adjust opacity as needed */
     z-index: -1;
 }
 
@@ -30,7 +30,7 @@ body::before {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.8); /* White with 80% opacity */
+    background-color: rgba(255, 255, 255, 0.1); /* White with 10% opacity */
     overflow: hidden; /* Prevent canvas overflow */
 }
 
