@@ -1,14 +1,26 @@
-/* Basic reset for margins and padding */
+/* Basic reset for margins and padding */ 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
+/* Background with pseudo-element for opacity control */
 body {
-    background-image: url('starter_pack/bgcollage.jpg');
-    background-size: cover; /* Make sure the image covers the entire viewport */
-    background-position: center;
-    background-repeat: no-repeat; /* Prevent the image from tiling */
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('starter_pack/bgcollage.jpg') no-repeat center center fixed;
+    background-size: cover;
+    opacity: 0.5; /* Adjust opacity as needed */
+    z-index: -1;
 }
 
 /* Container for the canvas */
@@ -119,32 +131,32 @@ body {
 /* Close button (X) in modal */
 .close-btn {
     color: #fff;
-    font-size: 32px; /* Larger size for better visibility */
+    font-size: 32px;
     font-weight: bold;
     position: absolute;
     right: 10px;
     top: 10px;
     cursor: pointer;
-    background-color: #ff0000; /* Red background */
-    border-radius: 50%;  /* Circular button */
-    width: 35px;  /* Increase size */
-    height: 35px;  /* Increase size */
+    background-color: #ff0000;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s ease;
 }
 
 .close-btn:hover,
 .close-btn:focus {
-    background-color: #cc0000; /* Darker red on hover */
-    transform: scale(1.1); /* Slightly enlarge on hover */
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Slightly stronger shadow on hover */
+    background-color: #cc0000;
+    transform: scale(1.1);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
 }
 
 .close-btn:focus {
-    outline: none; /* Remove outline on focus */
+    outline: none;
 }
 
 /* Thumbnails for overlay selection */
@@ -164,7 +176,7 @@ body {
 }
 
 #overlay-thumbnails img:hover {
-    transform: scale(1.1); /* Slight zoom on hover */
+    transform: scale(1.1);
 }
 
 /* Ensure mobile responsiveness for the modal */
