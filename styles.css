@@ -67,9 +67,10 @@ body {
 }
 
 .controls button {
-    background-color: #007bff;
+    background-color: #9c85ed;
     color: #fff;
 }
+
 
 .controls button:hover {
     background-color: #0056b3;
